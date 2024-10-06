@@ -1,0 +1,61 @@
+{
+  "version": 1.0,
+  "startingPose": null,
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BL First Ball"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "intakeBall"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BL Shoot First"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shootBall"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BL Second Ball"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "intakeBall"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BL Shoot Second"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shootBall"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

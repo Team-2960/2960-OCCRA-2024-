@@ -1,0 +1,52 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.2463980971453212,
+        "y": 5.068993053607162
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 3.413449008379919,
+        "y": 5.165439942176829
+      },
+      "isLocked": false,
+      "linkedName": "BL Shoot First End"
+    },
+    {
+      "anchor": {
+        "x": 4.108649492862003,
+        "y": 6.074953015276624
+      },
+      "prevControl": {
+        "x": 2.958684085046917,
+        "y": 6.074953015276624
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "BL Second Ball End"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "BL Auto",
+  "previewStartingState": {
+    "rotation": 0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

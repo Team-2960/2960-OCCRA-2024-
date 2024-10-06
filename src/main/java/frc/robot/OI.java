@@ -41,6 +41,7 @@ public class OI extends SubsystemBase {
         shooter.setShooter(gamepad2.getRawAxis(2));
     }
     
+    @Override
     public void periodic(){
         updateDrive();
         updateIntake();
