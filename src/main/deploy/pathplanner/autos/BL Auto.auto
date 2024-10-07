@@ -12,9 +12,22 @@
           }
         },
         {
-          "type": "named",
+          "type": "race",
           "data": {
-            "name": "intakeBall"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "intakeBall"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 1.5
+                }
+              }
+            ]
           }
         },
         {
@@ -36,15 +49,65 @@
           }
         },
         {
-          "type": "named",
+          "type": "race",
           "data": {
-            "name": "intakeBall"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "intakeBall"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 1.5
+                }
+              }
+            ]
           }
         },
         {
           "type": "path",
           "data": {
             "pathName": "BL Shoot Second"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shootBall"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BL Third Ball"
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "intakeBall"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 1.5
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BL Shoot Third"
           }
         },
         {

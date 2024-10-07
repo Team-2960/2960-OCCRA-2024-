@@ -31,7 +31,7 @@ public class OI extends SubsystemBase {
         }else if(gamepad2.getPOV() == 180){
             isIntakeExt = false;
         }
-        intake.setIntake(gamepad2.getRawAxis(3));
+        intake.setIntake(gamepad2.getRawButton(5));
         intake.setHandoff(gamepad2.getRawButton(6));
         
         intake.setIntakeExt(isIntakeExt);

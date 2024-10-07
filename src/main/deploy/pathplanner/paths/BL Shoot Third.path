@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.108649492862003,
-        "y": 6.074953015276624
+        "x": 4.095585077775387,
+        "y": 3.631907394079359
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.1086494928620034,
-        "y": 6.074953015276624
+        "x": 3.095585077775387,
+        "y": 3.631907394079359
       },
       "isLocked": false,
-      "linkedName": "BL Second Ball End"
+      "linkedName": "BL Third Ball End"
     },
     {
       "anchor": {
-        "x": 2.6323705880743504,
-        "y": 4.781575921701601
+        "x": 2.906723304893295,
+        "y": 3.631907394079359
       },
       "prevControl": {
-        "x": 3.5104749634522125,
-        "y": 5.016863279954335
+        "x": 3.906723304893295,
+        "y": 3.631907394079359
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "BL Shoot Second End"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],

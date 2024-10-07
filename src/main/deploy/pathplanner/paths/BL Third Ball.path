@@ -3,36 +3,36 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.108649492862003,
-        "y": 6.074953015276624
-      },
-      "prevControl": null,
-      "nextControl": {
-        "x": 3.1086494928620034,
-        "y": 6.074953015276624
-      },
-      "isLocked": false,
-      "linkedName": "BL Second Ball End"
-    },
-    {
-      "anchor": {
         "x": 2.6323705880743504,
         "y": 4.781575921701601
       },
+      "prevControl": null,
+      "nextControl": {
+        "x": 3.6323705880743504,
+        "y": 4.781575921701601
+      },
+      "isLocked": false,
+      "linkedName": "BL Shoot Second End"
+    },
+    {
+      "anchor": {
+        "x": 4.095585077775387,
+        "y": 3.631907394079359
+      },
       "prevControl": {
-        "x": 3.5104749634522125,
-        "y": 5.016863279954335
+        "x": 3.095585077775387,
+        "y": 3.631907394079359
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "BL Shoot Second End"
+      "linkedName": "BL Third Ball End"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "Charge Shoot",
+      "name": "Intake Ball",
       "waypointRelativePos": 0,
       "command": {
         "type": "race",
@@ -41,7 +41,7 @@
             {
               "type": "named",
               "data": {
-                "name": "chargeShoot"
+                "name": "intakeBall"
               }
             }
           ]
@@ -60,7 +60,7 @@
     "rotation": 0,
     "rotateFast": false
   },
-  "reversed": true,
+  "reversed": false,
   "folder": "BL Auto",
   "previewStartingState": {
     "rotation": 0,

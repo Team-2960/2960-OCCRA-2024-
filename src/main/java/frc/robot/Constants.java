@@ -17,6 +17,8 @@ public class Constants {
     public static final double intakePower = 0.5;
     public static final double handoffPower = 0.5;
 
+    public static final double shooterChargePower = 0.5;
+
     public static final int intakeExtModuleID = 0;
     public static final int intakeExtFor = 0;
     public static final int intakeExtRev = 0;
