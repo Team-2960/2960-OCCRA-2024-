@@ -4,7 +4,13 @@
 
 package frc.robot;
 
+import com.revrobotics.CANSparkBase;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkLowLevel.MotorType;
+
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.Drive;
 
 /**
@@ -17,16 +23,23 @@ public class Robot extends TimedRobot {
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
+   * 
    */
-    Drive drive;
+  Drive drive;
+  OI oi;
 
+  Joystick controller1 = new Joystick(0);
+  
   @Override
   public void robotInit() {
-    Drive drive = Drive.getInstance();
+    drive = Drive.getInstance();
+    oi = OI.getInstance();
   }
 
   @Override
-  public void robotPeriodic() {}
+  public void robotPeriodic() {
+    CommandScheduler.getInstance().run();
+  }
 
   @Override
   public void autonomousInit() {}
@@ -35,10 +48,14 @@ public class Robot extends TimedRobot {
   public void autonomousPeriodic() {}
 
   @Override
-  public void teleopInit() {}
+  public void teleopInit() {
+    
+  }
 
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+
+  }
 
   @Override
   public void disabledInit() {}
@@ -47,10 +64,14 @@ public class Robot extends TimedRobot {
   public void disabledPeriodic() {}
 
   @Override
-  public void testInit() {}
+  public void testInit() {
+  }
 
   @Override
-  public void testPeriodic() {}
+  public void testPeriodic() {
+    
+    Drive.getInstance().setPower(controller1.getRawAxis(1), controller1.getRawAxis(5));
+  }
 
   @Override
   public void simulationInit() {}

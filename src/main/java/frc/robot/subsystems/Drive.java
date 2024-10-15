@@ -29,6 +29,7 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -44,7 +45,7 @@ public class Drive extends SubsystemBase {
     private RelativeEncoder rightEncoder;
     private Encoder encoder;
 
-    private AHRS navx;
+    //private AHRS navx;
 
     private PIDController leftPID;
     private PIDController rightPID;
@@ -75,12 +76,12 @@ public class Drive extends SubsystemBase {
 
         leftEncoder = leftMotor1.getEncoder(Type.kHallSensor, 42);
         rightEncoder = rightMotor1.getEncoder(Type.kHallSensor, 42);
-        navx = new AHRS(SPI.Port.kMXP);
-        navx.reset();
+       // navx = new AHRS(SPI.Port.kMXP);
+       // navx.reset();
 
-        kinematics = new DifferentialDriveKinematics(Constants.trackWidth);
+       // kinematics = new DifferentialDriveKinematics(Constants.trackWidth);
         
-        poseEstimator = new DifferentialDrivePoseEstimator(kinematics, navx.getRotation2d(), 
+        /*poseEstimator = new DifferentialDrivePoseEstimator(kinematics, navx.getRotation2d(), 
             leftEncoder.getPosition() * Constants.wheelCirc, 
             rightEncoder.getPosition() * Constants.wheelCirc, 
             new Pose2d(0, 0, Rotation2d.fromDegrees(0)));
@@ -108,19 +109,19 @@ public class Drive extends SubsystemBase {
               return false;
             },
             this // Reference to this subsystem to set requirements
-    );
+    );*/
     }
 
-    public void setPower(double rightPower, double leftPower){
+    public void setPower(double leftPower, double rightPower){
         rightMotor1.set(rightPower);
         leftMotor1.set(leftPower);
     }
 
-    public void setVoltage(double rightVoltage, double leftVoltage){
+    public void setVoltage(double leftVoltage, double rightVoltage){
         rightMotor1.setVoltage(rightVoltage);
         leftMotor1.setVoltage(leftVoltage);
     }
-
+/* 
     public void setSpeeds(DifferentialDriveWheelSpeeds speeds) {
         final double leftFeedforward =
             feedforward.calculate(speeds.leftMetersPerSecond);
@@ -154,8 +155,17 @@ public class Drive extends SubsystemBase {
     public ChassisSpeeds getCurrentSpeeds(){
         return kinematics.toChassisSpeeds(new DifferentialDriveWheelSpeeds((leftEncoder.getVelocity() * Constants.wheelCirc)/60, rightEncoder.getVelocity()/60));
     }
+*/
 
+    @Override
+    public void periodic(){
+        SmartDashboard.putNumber("LMotor1 Pos", leftEncoder.getPosition());
+        SmartDashboard.putNumber("RMotor1 Pos", rightEncoder.getPosition());
 
+        SmartDashboard.putNumber("LMotor1 Velocity", leftEncoder.getVelocity());
+        SmartDashboard.putNumber("RMotor1 Velocity", rightEncoder.getPosition());
+
+    }
 
     public static Drive getInstance(){
         if(drive == null){
