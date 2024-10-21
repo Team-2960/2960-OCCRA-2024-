@@ -1,10 +1,10 @@
 package frc.robot;
 
 public class Constants {
-    public static final int leftMotor1ID = 0;
-    public static final int leftMotor2ID = 0;
-    public static final int rightMotor1ID = 0;
-    public static final int rightMotor2ID = 0;
+    public static final int leftMotor1ID = 3;
+    public static final int leftMotor2ID = 1;
+    public static final int rightMotor1ID = 4;
+    public static final int rightMotor2ID = 2;
 
     public static final int intakeMotorID = 0;
     public static final int handoffMotorID = 0;
@@ -25,5 +25,6 @@ public class Constants {
 
     public static final double wheelCirc = 0;
     public static final double trackWidth = 0;
+    public static final double driveGearRatio = 0.1182;
     
 }

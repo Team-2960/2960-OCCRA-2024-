@@ -44,7 +44,8 @@ public class Drive extends SubsystemBase {
     private RelativeEncoder rightEncoder;
     private Encoder encoder;
 
-    private AHRS navx;
+    //TODO Add in later
+    //private AHRS navx;
 
     private PIDController leftPID;
     private PIDController rightPID;
@@ -75,10 +76,10 @@ public class Drive extends SubsystemBase {
 
         leftEncoder = leftMotor1.getEncoder(Type.kHallSensor, 42);
         rightEncoder = rightMotor1.getEncoder(Type.kHallSensor, 42);
-        navx = new AHRS(SPI.Port.kMXP);
-        navx.reset();
+        //navx = new AHRS(SPI.Port.kMXP);
+        //navx.reset();
 
-        kinematics = new DifferentialDriveKinematics(Constants.trackWidth);
+        /*kinematics = new DifferentialDriveKinematics(Constants.trackWidth);
         
         poseEstimator = new DifferentialDrivePoseEstimator(kinematics, navx.getRotation2d(), 
             leftEncoder.getPosition() * Constants.wheelCirc, 
@@ -109,7 +110,7 @@ public class Drive extends SubsystemBase {
             },
             this // Reference to this subsystem to set requirements
     );
-    }
+        */} 
 
     public void setPower(double rightPower, double leftPower){
         rightMotor1.set(rightPower);
@@ -120,7 +121,7 @@ public class Drive extends SubsystemBase {
         rightMotor1.setVoltage(rightVoltage);
         leftMotor1.setVoltage(leftVoltage);
     }
-
+/* 
     public void setSpeeds(DifferentialDriveWheelSpeeds speeds) {
         final double leftFeedforward =
             feedforward.calculate(speeds.leftMetersPerSecond);
@@ -155,7 +156,7 @@ public class Drive extends SubsystemBase {
         return kinematics.toChassisSpeeds(new DifferentialDriveWheelSpeeds((leftEncoder.getVelocity() * Constants.wheelCirc)/60, rightEncoder.getVelocity()/60));
     }
 
-
+ */
 
     public static Drive getInstance(){
         if(drive == null){

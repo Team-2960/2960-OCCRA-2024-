@@ -15,5 +15,6 @@ public class shootBall extends Command {
     public boolean isFinished(){
         boolean finished = !Shooter.getInstance().isBallShot() && !Intake.getInstance().isBallReady();
         return finished;
+
     }
 }
