@@ -1,28 +1,40 @@
 package frc.robot;
 
 public class Constants {
+    //Motor IDs
     public static final int leftMotor1ID = 3;
     public static final int leftMotor2ID = 1;
     public static final int rightMotor1ID = 4;
     public static final int rightMotor2ID = 2;
 
-    public static final int intakeMotorID = 0;
-    public static final int handoffMotorID = 0;
+    public static final int intakeMotorID = 5;
+    public static final int handoffMotorID = 6;
     
-    public static final int shooterMotorID = 0;
+    public static final int shooterMotorID = 7;
 
+    //photoeye IDs
     public static final int intakePhotoeyeID = 0;
     public static final int shooterPhotoeye = 0;
     
-    public static final double intakePower = 0.5;
-    public static final double handoffPower = 0.5;
+    //Intake Speeds
+    public static final double intakePower = .25;
+    public static final double handoffPower = 1;
+    public static final double revHandoffPower = -1;
 
+    //Drive Speeds
+    public static final double turboMode = 0.7;
+    public static final double normalMode = 0.3;
+
+    //Shooter Speed
     public static final double shooterChargePower = 0.5;
+    public static final double shooterPower = 0.25;
 
+    //Pneumatics IDs
     public static final int intakeExtModuleID = 0;
     public static final int intakeExtFor = 0;
-    public static final int intakeExtRev = 0;
+    public static final int intakeExtRev = 1;
 
+    //Wheel Size
     public static final double wheelCirc = 0;
     public static final double trackWidth = 0;
     

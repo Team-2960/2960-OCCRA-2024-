@@ -13,7 +13,7 @@ public class shootBall extends Command {
 
     @Override 
     public boolean isFinished(){
-        boolean finished = !Shooter.getInstance().isBallShot() && !Intake.getInstance().isBallReady();
-        return finished;
+        //boolean finished = !Shooter.getInstance().isBallShot() && !Intake.getInstance().isBallReady();
+        return true;
     }
 }

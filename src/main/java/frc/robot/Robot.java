@@ -12,6 +12,9 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.Drive;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Pneumatics;
+import frc.robot.subsystems.Shooter;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -27,12 +30,18 @@ public class Robot extends TimedRobot {
    */
   Drive drive;
   OI oi;
+  Shooter shooter;
+  Intake intake;
+  Pneumatics pneumatics;
 
   Joystick controller1 = new Joystick(0);
   
   @Override
   public void robotInit() {
     drive = Drive.getInstance();
+    shooter = Shooter.getInstance();
+    intake = Intake.getInstance();
+    pneumatics = Pneumatics.getInstance();
     oi = OI.getInstance();
   }
 
@@ -70,7 +79,6 @@ public class Robot extends TimedRobot {
   @Override
   public void testPeriodic() {
     
-    Drive.getInstance().setPower(controller1.getRawAxis(1), controller1.getRawAxis(5));
   }
 
   @Override

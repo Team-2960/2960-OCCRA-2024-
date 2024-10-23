@@ -12,7 +12,7 @@ public class intakeBall extends Command {
 
     @Override
     public boolean isFinished(){
-        boolean finished = Intake.getInstance().isBallReady();
-        return finished;
+        //boolean finished = Intake.getInstance().isBallReady();
+        return true;
     }
 }

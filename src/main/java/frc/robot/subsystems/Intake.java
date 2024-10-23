@@ -17,19 +17,24 @@ public class Intake extends SubsystemBase{
     private CANSparkMax intakeMotor;
     private CANSparkMax handoffMotor;
     private DoubleSolenoid intakeExtender;
-    private DigitalInput intakePhotoeye;
+    //private DigitalInput intakePhotoeye;
     
 
     private Intake(){
         intakeMotor = new CANSparkMax(Constants.intakeMotorID, MotorType.kBrushless);
         handoffMotor = new CANSparkMax(Constants.handoffMotorID, MotorType.kBrushless);
-        intakeExtender = new DoubleSolenoid(Constants.intakeExtModuleID ,PneumaticsModuleType.REVPH , Constants.intakeExtFor, Constants.intakeExtRev);
-        intakePhotoeye = new DigitalInput(Constants.intakePhotoeyeID);
+        intakeExtender = new DoubleSolenoid(Constants.intakeExtModuleID ,PneumaticsModuleType.CTREPCM , Constants.intakeExtFor, Constants.intakeExtRev);
+        //intakePhotoeye = new DigitalInput(Constants.intakePhotoeyeID);
 
         intakeMotor.setIdleMode(IdleMode.kBrake);
         handoffMotor.setIdleMode(IdleMode.kBrake);
+        handoffMotor.setInverted(true);
+        intakeMotor.setInverted(true);
     }
-
+    /**
+     * Sets intake power
+     * @param setIntake
+     */
     public void setIntake(boolean setIntake){
         if (setIntake){
             intakeMotor.set(Constants.intakePower);
@@ -38,8 +43,14 @@ public class Intake extends SubsystemBase{
         }
     }
 
+    
+    
+    /**
+     * Sets handoff power
+     * @param setHandoff
+     */
     public void setHandoff(boolean setHandoff){
-        if(setHandoff == true){
+        if(setHandoff){
             handoffMotor.set(Constants.handoffPower);
         } else{
             handoffMotor.set(0);
@@ -47,6 +58,23 @@ public class Intake extends SubsystemBase{
         
     }
 
+    /**
+     * Reverses handoff direction
+     * @param setReverseIntake
+     */
+    
+    public void setReverseHandoff(boolean setReverseHandoff){
+        if (setReverseHandoff){
+            handoffMotor.set(Constants.revHandoffPower);
+        }else{
+            handoffMotor.set(0);
+        }
+    }
+    
+    /**
+     * Sets intake extend position
+     * @param setIntake
+     */
     public void setIntakeExt(boolean setIntake){
         if(setIntake == true){
             intakeExtender.set(Value.kForward);
@@ -55,29 +83,30 @@ public class Intake extends SubsystemBase{
         }
     }
 
+    /**
+     * Runs both intake and handoff at the same time
+     * @param setIntake
+     * @param setHandoff
+     */
     public void runAllIntake(boolean setIntake, boolean setHandoff){
-        if (intakePhotoeye.get() == false){
-            if (setIntake){
-                intakeMotor.set(Constants.intakePower);
-            }else{
-                intakeMotor.set(0);
-            }   
-            
-            if (setHandoff == true){
-                handoffMotor.set(Constants.handoffPower);
-            } else{
-                handoffMotor.set(0);
-            }
+        if (setIntake){
+            intakeMotor.set(Constants.intakePower);
         }else{
             intakeMotor.set(0);
+        }
+
+        if (setHandoff){
+            handoffMotor.set(Constants.handoffPower);
+        }else{
             handoffMotor.set(0);
         }
     }
 
+    /* 
     public boolean isBallReady(){
         return intakePhotoeye.get();
     }
-
+    */
     
     
     public static Intake getInstance(){

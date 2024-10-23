@@ -10,8 +10,8 @@ import frc.robot.subsystems.Shooter;
 
 public class OI extends SubsystemBase {
     
-   // private Intake intake = Intake.getInstance();
-    //private Shooter shooter = Shooter.getInstance();
+    private Intake intake = Intake.getInstance();
+    private Shooter shooter = Shooter.getInstance();
     private static OI oi = null;
     private Joystick gamepad1;
     private Joystick gamepad2;
@@ -22,12 +22,16 @@ public class OI extends SubsystemBase {
         gamepad2 = new Joystick(1);
     }
 
+//Driver
     private void updateDrive(){
         Drive drive = Drive.getInstance();
-        drive.setPower(MathUtil.applyDeadband(gamepad1.getRawAxis(1), 0.05), 
-            MathUtil.applyDeadband(gamepad1.getRawAxis(5), 0.05));
+        drive.setPower(MathUtil.applyDeadband(gamepad1.getRawAxis(1), 0.1), 
+            MathUtil.applyDeadband(gamepad1.getRawAxis(5), 0.1), 
+            gamepad1.getRawButton(6));
     }
-/* 
+
+
+//Operator
     private void updateIntake(){
         boolean isIntakeExt = false;
         if (gamepad2.getPOV() == 0){
@@ -35,20 +39,41 @@ public class OI extends SubsystemBase {
         }else if(gamepad2.getPOV() == 180){
             isIntakeExt = false;
         }
-        intake.setIntake(gamepad2.getRawButton(5));
-        intake.setHandoff(gamepad2.getRawButton(6));
+
+        if(gamepad2.getRawButton(6)){
+            intake.setReverseHandoff(true);
+        }else if(gamepad2.getRawButton(5)){
+            intake.setIntake(true);
+            intake.setHandoff(true);
+        }else{
+            intake.setIntake(false);
+            intake.setHandoff(false);
+        }
+        //intake.setReverseHandoff(gamepad2.getRawButton(6));
+
+        //intake.setIntake(gamepad2.getRawButton(5));
+        //intake.setHandoff(gamepad2.getRawButton(5));
+
+        
         
         intake.setIntakeExt(isIntakeExt);
+
     }
 
     private void updateShooter(){
-        shooter.setShooter(gamepad2.getRawAxis(2));
+        if (gamepad2.getRawAxis(3) > 0.1){
+            shooter.enableShooter(true);
+        }else{
+            shooter.enableShooter(false);
+        }
     }
-*/
+
     @Override
     public void periodic(){
         if(DriverStation.isTeleop()){
             updateDrive();
+            updateIntake();
+            updateShooter();
         }
     }
 

@@ -61,6 +61,8 @@ public class Drive extends SubsystemBase {
 
     public AutoBuilder autoBuilder;
 
+    public int number = 4;
+
     
 
     private Drive(){
@@ -69,8 +71,8 @@ public class Drive extends SubsystemBase {
         rightMotor1 = new CANSparkMax(Constants.rightMotor1ID, MotorType.kBrushless);
         rightMotor2 = new CANSparkMax(Constants.rightMotor2ID, MotorType.kBrushless);
 
-        leftMotor2.follow(leftMotor1);
-        rightMotor2.follow(rightMotor1);
+        //leftMotor2.follow(leftMotor1);
+        //rightMotor2.follow(rightMotor1);
 
         leftMotor1.setInverted(true);
 
@@ -112,11 +114,25 @@ public class Drive extends SubsystemBase {
     );*/
     }
 
-    public void setPower(double leftPower, double rightPower){
-        rightMotor1.set(rightPower);
-        leftMotor1.set(leftPower);
+    public void setPower(double leftPower, double rightPower, boolean turbo){
+        if (turbo){
+            rightMotor1.set(rightPower * Constants.turboMode);
+            rightMotor2.set(rightPower * Constants.turboMode);
+            leftMotor1.set(leftPower * Constants.turboMode);
+            leftMotor2.set(leftPower * Constants.turboMode);
+        }else{
+            rightMotor1.set(rightPower * Constants.normalMode);
+            rightMotor2.set(rightPower * Constants.normalMode);
+            leftMotor1.set(leftPower * Constants.normalMode);
+            leftMotor2.set(leftPower * Constants.normalMode);
+        }
     }
 
+    /**
+     * Sets the voltage of the drive motors
+     * @param leftVoltage
+     * @param rightVoltage
+     */
     public void setVoltage(double leftVoltage, double rightVoltage){
         rightMotor1.setVoltage(rightVoltage);
         leftMotor1.setVoltage(leftVoltage);
@@ -165,6 +181,8 @@ public class Drive extends SubsystemBase {
         SmartDashboard.putNumber("LMotor1 Velocity", leftEncoder.getVelocity());
         SmartDashboard.putNumber("RMotor1 Velocity", rightEncoder.getPosition());
 
+        SmartDashboard.putNumber("LeftMotor1 V", leftMotor1.getBusVoltage());
+        SmartDashboard.putNumber("LeftMotor2 V", leftMotor2.getBusVoltage());
     }
 
     public static Drive getInstance(){
