@@ -45,7 +45,7 @@ public class Drive extends SubsystemBase {
     private RelativeEncoder rightEncoder;
     private Encoder encoder;
 
-    //private AHRS navx;
+    private AHRS navx;
 
     private PIDController leftPID;
     private PIDController rightPID;
@@ -78,11 +78,11 @@ public class Drive extends SubsystemBase {
 
         leftEncoder = leftMotor1.getEncoder(Type.kHallSensor, 42);
         rightEncoder = rightMotor1.getEncoder(Type.kHallSensor, 42);
-       // navx = new AHRS(SPI.Port.kMXP);
-       // navx.reset();
+        navx = new AHRS(SPI.Port.kMXP);
+        navx.reset();
 
-       // kinematics = new DifferentialDriveKinematics(Constants.trackWidth);
-        
+        kinematics = new DifferentialDriveKinematics(Constants.trackWidth);
+    }
         /*poseEstimator = new DifferentialDrivePoseEstimator(kinematics, navx.getRotation2d(), 
             leftEncoder.getPosition() * Constants.wheelCirc, 
             rightEncoder.getPosition() * Constants.wheelCirc, 
@@ -111,7 +111,7 @@ public class Drive extends SubsystemBase {
               return false;
             },
             this // Reference to this subsystem to set requirements
-    );*/
+    );
     }
 
     public void setPower(double leftPower, double rightPower, boolean turbo){
@@ -183,6 +183,7 @@ public class Drive extends SubsystemBase {
 
         SmartDashboard.putNumber("LeftMotor1 V", leftMotor1.getBusVoltage());
         SmartDashboard.putNumber("LeftMotor2 V", leftMotor2.getBusVoltage());
+
     }
 
     public static Drive getInstance(){
