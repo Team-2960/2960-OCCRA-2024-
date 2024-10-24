@@ -36,6 +36,7 @@ public class Constants {
 
     //Wheel Size
     public static final double wheelCirc = 18.85;
+    //TODO Change trackWidth to be accurate to robot
     public static final double trackWidth = 0;
     public static final double driveGearRatio = 0.1182;
     

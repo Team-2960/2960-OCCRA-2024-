@@ -81,22 +81,28 @@ public class Drive extends SubsystemBase {
         leftMotor1.setInverted(true);
         leftMotor2.setInverted(true);
 
+        //Encoders are based off of the values from the motor's HallSensor. There is no encoder on the wheel's shaft, it is just straight NEO motor values.
         leftEncoder = leftMotor1.getEncoder(Type.kHallSensor, 42);
         rightEncoder = rightMotor1.getEncoder(Type.kHallSensor, 42);
+        
+        //Initialize Gyroscope
         imu = BNO055.getInstance(BNO055.opmode_t.OPERATION_MODE_IMUPLUS,
             BNO055.vector_type_t.VECTOR_EULER);
 
+        //Initialize kinematics and Pose Estimator
         kinematics = new DifferentialDriveKinematics(Constants.trackWidth);
-    
+
         poseEstimator = new DifferentialDrivePoseEstimator(kinematics, Rotation2d.fromDegrees(imu.getHeading()), 
             leftEncoder.getPosition() * Constants.driveGearRatio * Constants.wheelCirc, 
             rightEncoder.getPosition() * Constants.driveGearRatio * Constants.wheelCirc, 
             new Pose2d(0, 0, Rotation2d.fromDegrees(0)));
 
+        //feedforward and PID values
         feedforward = new SimpleMotorFeedforward(1, 3);
         leftPidController = new PIDController(1, 0, 0);
         rightPidController = new PIDController(1, 0, 0);
 
+        //Configuration of the Ramsete Controller used to control the robot in PathPlanner Autons.
         autoBuilder = new AutoBuilder();
         AutoBuilder.configureRamsete(
             this::getPose, // Robot pose supplier
@@ -119,6 +125,7 @@ public class Drive extends SubsystemBase {
         );
     }
 
+    //Set left and right side speeds with option of turbo
     public void setPower(double leftPower, double rightPower, boolean turbo){
         if (turbo){
             rightMotor1.set(rightPower * Constants.turboMode);
@@ -138,6 +145,7 @@ public class Drive extends SubsystemBase {
      * @param leftVoltage
      * @param rightVoltage
      */
+    //Set voltage of drive motors
     public void setVoltage(double leftVoltage, double rightVoltage){
         rightMotor1.setVoltage(rightVoltage);
         rightMotor2.setVoltage(rightVoltage);
@@ -145,6 +153,7 @@ public class Drive extends SubsystemBase {
         leftMotor2.setVoltage(leftVoltage);
     }
 
+    //Set speeds of chassis motors based on calculation by feeding DifferentialDriveWheelSpeeds into feedforwards and PID Controllers
     public void setSpeeds(DifferentialDriveWheelSpeeds speeds) {
         final double leftFeedforward =
             feedforward.calculate(speeds.leftMetersPerSecond);
@@ -159,11 +168,14 @@ public class Drive extends SubsystemBase {
         rightMotor1.setVoltage(rightOutput + rightFeedforward);
     }
 
+    //Converts ChassisSpeeds to DifferentialDriveWheelSpeeds using kinematics function, then input the speed into the setSpeeds method.
     public void drive(ChassisSpeeds chassisSpeeds){
         DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(chassisSpeeds);
         setSpeeds(wheelSpeeds);
     }
 
+    //Method used to preset the position of the robot. Pose estimator applies an offset to the gyroscope, resets the encoders, 
+    //presets the your pose on the field based on the parameters you give the method.
     public void presetPosition(Pose2d pose2d){
         poseEstimator.resetPosition(Rotation2d.fromDegrees(imu.getHeading()), 
             new DifferentialDriveWheelPositions(leftEncoder.getPosition() * Constants.wheelCirc, 
@@ -171,10 +183,12 @@ public class Drive extends SubsystemBase {
             pose2d);
     }
 
+    //Method that gets the pose from the poseEstimator, mainly created for the pathPlanner to call.
     public Pose2d getPose(){
         return poseEstimator.getEstimatedPosition();
     }
 
+    //Method to return the motor velocities, motor velocities (Rotations per minute divided by 60) altered using wheel Circumfrence and gearbox gear ratio to accomodate for the robot.
     public ChassisSpeeds getCurrentSpeeds(){
         return kinematics.toChassisSpeeds(new DifferentialDriveWheelSpeeds((leftEncoder.getVelocity() * Constants.wheelCirc * Constants.driveGearRatio)/60, 
             (rightEncoder.getVelocity() * Constants.wheelCirc * Constants.driveGearRatio)/60));
@@ -192,12 +206,23 @@ public class Drive extends SubsystemBase {
 
         SmartDashboard.putNumber("LeftMotor1 V", leftMotor1.getBusVoltage());
         SmartDashboard.putNumber("LeftMotor2 V", leftMotor2.getBusVoltage());
-        //Gyroscope
+
+        //Gyroscope Values
         SmartDashboard.putBoolean("Gyro Initialized", imu.isInitialized());
         SmartDashboard.putBoolean("Gyro Calibrated", imu.isCalibrated());
         SmartDashboard.putBoolean("Gyro Present", imu.isSensorPresent());
         SmartDashboard.putNumberArray("Gyro Vector", imu.getVector());
         SmartDashboard.putNumber("Gyro Heading", imu.getHeading());
+
+        //Pose Estimator Values
+        SmartDashboard.putNumber("X Pose", poseEstimator.getEstimatedPosition().getX());
+        SmartDashboard.putNumber("Y Pose", poseEstimator.getEstimatedPosition().getY());
+        SmartDashboard.putNumber("Rotation Pose", poseEstimator.getEstimatedPosition().getRotation().getDegrees());
+        
+        //Chassis Speed Values
+        SmartDashboard.putNumber("X Velocity", getCurrentSpeeds().vxMetersPerSecond);
+        SmartDashboard.putNumber("Y Velocity", getCurrentSpeeds().vyMetersPerSecond);
+        SmartDashboard.putNumber("Angular Velocity", Math.toDegrees(getCurrentSpeeds().omegaRadiansPerSecond));
     }
 
     public static Drive getInstance(){
