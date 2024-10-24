@@ -95,7 +95,7 @@ public class Drive extends SubsystemBase {
         poseEstimator = new DifferentialDrivePoseEstimator(kinematics, Rotation2d.fromDegrees(imu.getHeading()), 
             leftEncoder.getPosition() * Constants.driveGearRatio * Constants.wheelCirc, 
             rightEncoder.getPosition() * Constants.driveGearRatio * Constants.wheelCirc, 
-            new Pose2d(0, 0, Rotation2d.fromDegrees(0)));
+            new Pose2d());
 
         //feedforward and PID values
         feedforward = new SimpleMotorFeedforward(1, 3);
@@ -194,35 +194,47 @@ public class Drive extends SubsystemBase {
             (rightEncoder.getVelocity() * Constants.wheelCirc * Constants.driveGearRatio)/60));
     }
 
-
+    public void updatePose(){
+        poseEstimator.update(Rotation2d.fromDegrees(imu.getHeading()), 
+            new DifferentialDriveWheelPositions(leftEncoder.getPosition() * Constants.driveGearRatio * Constants.wheelCirc, 
+                rightEncoder.getPosition() * Constants.driveGearRatio * Constants.wheelCirc));
+    }
     @Override
     public void periodic(){
+        updatePose();
+        Pose2d pose = poseEstimator.update(Rotation2d.fromDegrees(imu.getHeading()), 
+            new DifferentialDriveWheelPositions(leftEncoder.getPosition() * Constants.driveGearRatio * Constants.wheelCirc, 
+                rightEncoder.getPosition() * Constants.driveGearRatio * Constants.wheelCirc));
+        
         //Motor Values
         SmartDashboard.putNumber("LMotor1 Pos", leftEncoder.getPosition());
         SmartDashboard.putNumber("RMotor1 Pos", rightEncoder.getPosition());
 
         SmartDashboard.putNumber("LMotor1 Velocity", leftEncoder.getVelocity());
-        SmartDashboard.putNumber("RMotor1 Velocity", rightEncoder.getPosition());
+        SmartDashboard.putNumber("RMotor1 Velocity", rightEncoder.getVelocity());
 
-        SmartDashboard.putNumber("LeftMotor1 V", leftMotor1.getBusVoltage());
-        SmartDashboard.putNumber("LeftMotor2 V", leftMotor2.getBusVoltage());
+        //SmartDashboard.putNumber("LeftMotor1 V", leftMotor1.getBusVoltage());
+        //SmartDashboard.putNumber("LeftMotor2 V", leftMotor2.getBusVoltage());
 
+        /* 
         //Gyroscope Values
         SmartDashboard.putBoolean("Gyro Initialized", imu.isInitialized());
         SmartDashboard.putBoolean("Gyro Calibrated", imu.isCalibrated());
         SmartDashboard.putBoolean("Gyro Present", imu.isSensorPresent());
         SmartDashboard.putNumberArray("Gyro Vector", imu.getVector());
         SmartDashboard.putNumber("Gyro Heading", imu.getHeading());
-
+        */
+        
         //Pose Estimator Values
-        SmartDashboard.putNumber("X Pose", poseEstimator.getEstimatedPosition().getX());
-        SmartDashboard.putNumber("Y Pose", poseEstimator.getEstimatedPosition().getY());
-        SmartDashboard.putNumber("Rotation Pose", poseEstimator.getEstimatedPosition().getRotation().getDegrees());
+        SmartDashboard.putNumber("X Pose", pose.getX());
+        SmartDashboard.putNumber("Y Pose", pose.getY());
+        SmartDashboard.putNumber("Rotation Pose", getPose().getRotation().getDegrees());
         
         //Chassis Speed Values
         SmartDashboard.putNumber("X Velocity", getCurrentSpeeds().vxMetersPerSecond);
         SmartDashboard.putNumber("Y Velocity", getCurrentSpeeds().vyMetersPerSecond);
         SmartDashboard.putNumber("Angular Velocity", Math.toDegrees(getCurrentSpeeds().omegaRadiansPerSecond));
+        
     }
 
     public static Drive getInstance(){

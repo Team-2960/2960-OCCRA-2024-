@@ -27,17 +27,16 @@ public class Constants {
 
     //Shooter Speed
     public static final double shooterChargePower = 0.5;
-    public static final double shooterPower = 0.25;
+    public static final double shooterPower = 0.27;
 
     //Pneumatics IDs
     public static final int intakeExtModuleID = 0;
-    public static final int intakeExtFor = 0;
-    public static final int intakeExtRev = 1;
+    public static final int intakeExtFor = 1;
+    public static final int intakeExtRev = 0;
 
     //Wheel Size
-    public static final double wheelCirc = 18.85;
-    //TODO Change trackWidth to be accurate to robot
-    public static final double trackWidth = 0;
+    public static final double wheelCirc = 0.479;
+    public static final double trackWidth = 0.591;
     public static final double driveGearRatio = 0.1182;
     
 }

@@ -7,7 +7,9 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -17,15 +19,16 @@ public class Intake extends SubsystemBase{
     private CANSparkMax intakeMotor;
     private CANSparkMax handoffMotor;
     private DoubleSolenoid intakeExtender;
+
+    private boolean intakeExtState = false;
     //private DigitalInput intakePhotoeye;
     
 
     private Intake(){
         intakeMotor = new CANSparkMax(Constants.intakeMotorID, MotorType.kBrushless);
         handoffMotor = new CANSparkMax(Constants.handoffMotorID, MotorType.kBrushless);
-        intakeExtender = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Constants.intakeExtFor, Constants.intakeExtRev);
+        intakeExtender = new DoubleSolenoid(20, PneumaticsModuleType.CTREPCM, Constants.intakeExtFor, Constants.intakeExtRev);
         //intakePhotoeye = new DigitalInput(Constants.intakePhotoeyeID);
-
         intakeMotor.setIdleMode(IdleMode.kBrake);
         handoffMotor.setIdleMode(IdleMode.kBrake);
         handoffMotor.setInverted(true);
@@ -81,6 +84,8 @@ public class Intake extends SubsystemBase{
         }else{
             intakeExtender.set(Value.kReverse);
         }
+        intakeExtState = setIntake;
+        
     }
 
     /**
@@ -107,6 +112,13 @@ public class Intake extends SubsystemBase{
         return intakePhotoeye.get();
     }
     */
+    @Override
+    public void periodic(){
+        SmartDashboard.putBoolean("Intake State", intakeExtState);
+        SmartDashboard.putBoolean("FwsSolenoidDisabled?", intakeExtender.isFwdSolenoidDisabled());
+        SmartDashboard.putBoolean("RevSolenoidDisabled?", intakeExtender.isRevSolenoidDisabled());
+
+    }
     
     
     public static Intake getInstance(){
