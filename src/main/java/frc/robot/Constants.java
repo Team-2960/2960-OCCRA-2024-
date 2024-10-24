@@ -35,7 +35,7 @@ public class Constants {
     public static final int intakeExtRev = 1;
 
     //Wheel Size
-    public static final double wheelCirc = 0;
+    public static final double wheelCirc = 18.85;
     public static final double trackWidth = 0;
     public static final double driveGearRatio = 0.1182;
     

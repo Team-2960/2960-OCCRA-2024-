@@ -23,7 +23,7 @@ public class Intake extends SubsystemBase{
     private Intake(){
         intakeMotor = new CANSparkMax(Constants.intakeMotorID, MotorType.kBrushless);
         handoffMotor = new CANSparkMax(Constants.handoffMotorID, MotorType.kBrushless);
-        intakeExtender = new DoubleSolenoid(Constants.intakeExtModuleID ,PneumaticsModuleType.CTREPCM , Constants.intakeExtFor, Constants.intakeExtRev);
+        intakeExtender = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Constants.intakeExtFor, Constants.intakeExtRev);
         //intakePhotoeye = new DigitalInput(Constants.intakePhotoeyeID);
 
         intakeMotor.setIdleMode(IdleMode.kBrake);

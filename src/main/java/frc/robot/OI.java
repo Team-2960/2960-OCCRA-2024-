@@ -33,11 +33,10 @@ public class OI extends SubsystemBase {
 
 //Operator
     private void updateIntake(){
-        boolean isIntakeExt = false;
         if (gamepad2.getPOV() == 0){
-            isIntakeExt = true;
+            intake.setIntakeExt(true);
         }else if(gamepad2.getPOV() == 180){
-            isIntakeExt = false;
+            intake.setIntakeExt(false);
         }
 
         if(gamepad2.getRawButton(6)){
@@ -54,9 +53,6 @@ public class OI extends SubsystemBase {
         //intake.setIntake(gamepad2.getRawButton(5));
         //intake.setHandoff(gamepad2.getRawButton(5));
 
-        
-        
-        intake.setIntakeExt(isIntakeExt);
 
     }
 

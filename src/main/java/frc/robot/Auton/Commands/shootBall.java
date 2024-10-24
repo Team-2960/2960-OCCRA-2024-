@@ -8,12 +8,14 @@ public class shootBall extends Command {
     @Override
     public void initialize(){
         Shooter.getInstance().setShooter(1);
-        Intake.getInstance().runAllIntake(true, true);
+        if (Shooter.getInstance().isShooterAtSpeed(0)){
+            Intake.getInstance().runAllIntake(true, true);
+        }
     }
 
     @Override 
     public boolean isFinished(){
-        boolean finished = !Shooter.getInstance().isBallShot() && !Intake.getInstance().isBallReady();
-        return finished;
+        //boolean finished = !Shooter.getInstance().isBallShot() && !Intake.getInstance().isBallReady();
+        return false;
     }
 }

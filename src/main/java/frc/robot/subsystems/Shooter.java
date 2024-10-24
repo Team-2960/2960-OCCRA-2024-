@@ -43,12 +43,20 @@ public class Shooter extends SubsystemBase {
         }
     }
 
+    public boolean isShooterAtSpeed(double desiredVelocity){
+        if (shooterMotor.getAbsoluteEncoder().getVelocity() == desiredVelocity){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
     /* 
     public boolean isBallShot(){
         return shooterPhotoeye.get();
     }
     */
-
+    
     public static Shooter getInstance(){
         if (shooter == null){
             shooter = new Shooter();
