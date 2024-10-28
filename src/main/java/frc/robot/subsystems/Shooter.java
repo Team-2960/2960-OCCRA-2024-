@@ -32,6 +32,18 @@ public class Shooter extends SubsystemBase {
     }
 
     /**
+     * Reverses shooter (TODO remove if this breaks code)
+     * @param speed
+     */
+    public void revShootSpeed(boolean enable){
+        if (enable){
+        shooterMotor.set(Constants.reverseShooterPower);
+    }else{
+        shooterMotor.set(0);
+    }
+}
+
+    /**
      * Sets shooter power
      * @param enable
      */

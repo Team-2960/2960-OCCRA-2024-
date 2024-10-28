@@ -24,11 +24,15 @@ import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelPositions;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.kinematics.WheelPositions;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -61,9 +65,16 @@ public class Drive extends SubsystemBase {
     private PIDController leftPidController;
     private PIDController rightPidController;
 
+    private GenericEntry sbPoseX;
+    private GenericEntry sbPoseY;
+    private GenericEntry sbRotationPose;
+    private GenericEntry sbRawRotation;
+
     public AutoBuilder autoBuilder;
 
-    public int number = 4;
+    private double rawRotation2d;
+    private Rotation2d currentRotation2d;
+    
 
     
 
@@ -91,8 +102,9 @@ public class Drive extends SubsystemBase {
 
         //Initialize kinematics and Pose Estimator
         kinematics = new DifferentialDriveKinematics(Constants.trackWidth);
-
-        poseEstimator = new DifferentialDrivePoseEstimator(kinematics, Rotation2d.fromDegrees(imu.getHeading()), 
+        rawRotation2d = imu.getHeading();
+        currentRotation2d = Rotation2d.fromDegrees(rawRotation2d);
+        poseEstimator = new DifferentialDrivePoseEstimator(kinematics, currentRotation2d, 
             leftEncoder.getPosition() * Constants.driveGearRatio * Constants.wheelCirc, 
             rightEncoder.getPosition() * Constants.driveGearRatio * Constants.wheelCirc, 
             new Pose2d());
@@ -101,6 +113,16 @@ public class Drive extends SubsystemBase {
         feedforward = new SimpleMotorFeedforward(1, 3);
         leftPidController = new PIDController(1, 0, 0);
         rightPidController = new PIDController(1, 0, 0);
+
+        var poseLayout = Shuffleboard.getTab("Drive")
+            .getLayout("Drive Pose", BuiltInLayouts.kList)
+            .withSize(1, 4);
+        sbPoseX = poseLayout.add("Pose X", poseEstimator.getEstimatedPosition().getX()).getEntry();
+        sbPoseY = poseLayout.add("Pose Y", poseEstimator.getEstimatedPosition().getY()).getEntry();
+        sbRotationPose = poseLayout.add("Pose Rotation", poseEstimator.getEstimatedPosition().getRotation().getDegrees()).getEntry();
+        sbRawRotation = poseLayout.add("Raw Rotation", rawRotation2d).getEntry();
+
+        
 
         //Configuration of the Ramsete Controller used to control the robot in PathPlanner Autons.
         autoBuilder = new AutoBuilder();
@@ -177,7 +199,7 @@ public class Drive extends SubsystemBase {
     //Method used to preset the position of the robot. Pose estimator applies an offset to the gyroscope, resets the encoders, 
     //presets the your pose on the field based on the parameters you give the method.
     public void presetPosition(Pose2d pose2d){
-        poseEstimator.resetPosition(Rotation2d.fromDegrees(imu.getHeading()), 
+        poseEstimator.resetPosition(currentRotation2d, 
             new DifferentialDriveWheelPositions(leftEncoder.getPosition() * Constants.wheelCirc, 
             rightEncoder.getPosition() * Constants.wheelCirc),
             pose2d);
@@ -195,46 +217,26 @@ public class Drive extends SubsystemBase {
     }
 
     public void updatePose(){
-        poseEstimator.update(Rotation2d.fromDegrees(imu.getHeading()), 
+        poseEstimator.update(currentRotation2d, 
             new DifferentialDriveWheelPositions(leftEncoder.getPosition() * Constants.driveGearRatio * Constants.wheelCirc, 
                 rightEncoder.getPosition() * Constants.driveGearRatio * Constants.wheelCirc));
     }
+
+    public void updateUI(){
+        Pose2d pose = poseEstimator.getEstimatedPosition();
+        sbPoseX.setDouble(pose.getX());
+        sbPoseY.setDouble(pose.getY());
+        sbRotationPose.setDouble(pose.getRotation().getDegrees());
+        sbRawRotation.setDouble(rawRotation2d);
+    }
+
     @Override
     public void periodic(){
+        rawRotation2d = imu.getHeading();
+        currentRotation2d = Rotation2d.fromDegrees(rawRotation2d);
         updatePose();
-        Pose2d pose = poseEstimator.update(Rotation2d.fromDegrees(imu.getHeading()), 
-            new DifferentialDriveWheelPositions(leftEncoder.getPosition() * Constants.driveGearRatio * Constants.wheelCirc, 
-                rightEncoder.getPosition() * Constants.driveGearRatio * Constants.wheelCirc));
-        
-        //Motor Values
-        SmartDashboard.putNumber("LMotor1 Pos", leftEncoder.getPosition());
-        SmartDashboard.putNumber("RMotor1 Pos", rightEncoder.getPosition());
-
-        SmartDashboard.putNumber("LMotor1 Velocity", leftEncoder.getVelocity());
-        SmartDashboard.putNumber("RMotor1 Velocity", rightEncoder.getVelocity());
-
-        //SmartDashboard.putNumber("LeftMotor1 V", leftMotor1.getBusVoltage());
-        //SmartDashboard.putNumber("LeftMotor2 V", leftMotor2.getBusVoltage());
-
-        /* 
-        //Gyroscope Values
-        SmartDashboard.putBoolean("Gyro Initialized", imu.isInitialized());
-        SmartDashboard.putBoolean("Gyro Calibrated", imu.isCalibrated());
-        SmartDashboard.putBoolean("Gyro Present", imu.isSensorPresent());
-        SmartDashboard.putNumberArray("Gyro Vector", imu.getVector());
-        SmartDashboard.putNumber("Gyro Heading", imu.getHeading());
-        */
-        
-        //Pose Estimator Values
-        SmartDashboard.putNumber("X Pose", pose.getX());
-        SmartDashboard.putNumber("Y Pose", pose.getY());
-        SmartDashboard.putNumber("Rotation Pose", getPose().getRotation().getDegrees());
-        
-        //Chassis Speed Values
-        SmartDashboard.putNumber("X Velocity", getCurrentSpeeds().vxMetersPerSecond);
-        SmartDashboard.putNumber("Y Velocity", getCurrentSpeeds().vyMetersPerSecond);
-        SmartDashboard.putNumber("Angular Velocity", Math.toDegrees(getCurrentSpeeds().omegaRadiansPerSecond));
-        
+        updateUI();
+               
     }
 
     public static Drive getInstance(){

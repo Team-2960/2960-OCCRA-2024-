@@ -62,6 +62,12 @@ public class OI extends SubsystemBase {
         }else{
             shooter.enableShooter(false);
         }
+
+        if(gamepad2.getRawAxis(2) > 0.1){
+            shooter.revShootSpeed(true);
+        }else{
+            shooter.revShootSpeed(false);
+        }
     }
 
     @Override

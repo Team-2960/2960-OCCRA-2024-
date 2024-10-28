@@ -27,6 +27,7 @@ public class Constants {
 
     //Shooter Speed
     public static final double shooterChargePower = 0.5;
+    public static final double reverseShooterPower = -0.27;
     public static final double shooterPower = 0.27;
 
     //Pneumatics IDs
