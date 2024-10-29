@@ -10,7 +10,9 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Auton.RobotContainer;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Pneumatics;
@@ -33,6 +35,8 @@ public class Robot extends TimedRobot {
   Shooter shooter;
   Intake intake;
   Pneumatics pneumatics;
+  Command autonomousCommand;
+  RobotContainer robotContainer;
 
   Joystick controller1 = new Joystick(0);
   
@@ -51,14 +55,21 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void autonomousInit() {}
+  public void autonomousInit() {
+    autonomousCommand = robotContainer.getAutonomousCommand();
+    if (autonomousCommand == null){
+      autonomousCommand.schedule();
+    }
+  }
 
   @Override
   public void autonomousPeriodic() {}
 
   @Override
   public void teleopInit() {
-    
+    if (autonomousCommand == null){
+      autonomousCommand.cancel();
+    }
   }
 
   @Override
