@@ -190,6 +190,13 @@ public class Drive extends SubsystemBase {
         rightMotor1.setVoltage(rightOutput + rightFeedforward);
     }
 
+    public double getLeftPosition(){
+        return leftEncoder.getPosition() * Constants.driveGearRatio * Constants.wheelCirc;
+    }
+
+    public double getRightPosition(){
+        return rightEncoder.getPosition() * Constants.driveGearRatio * Constants.wheelCirc;
+    }
     //Converts ChassisSpeeds to DifferentialDriveWheelSpeeds using kinematics function, then input the speed into the setSpeeds method.
     public void drive(ChassisSpeeds chassisSpeeds){
         DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(chassisSpeeds);
@@ -200,8 +207,8 @@ public class Drive extends SubsystemBase {
     //presets the your pose on the field based on the parameters you give the method.
     public void presetPosition(Pose2d pose2d){
         poseEstimator.resetPosition(currentRotation2d, 
-            new DifferentialDriveWheelPositions(leftEncoder.getPosition() * Constants.wheelCirc, 
-            rightEncoder.getPosition() * Constants.wheelCirc),
+            new DifferentialDriveWheelPositions(getLeftPosition(), 
+            getRightPosition()),
             pose2d);
     }
 
@@ -212,15 +219,17 @@ public class Drive extends SubsystemBase {
 
     //Method to return the motor velocities, motor velocities (Rotations per minute divided by 60) altered using wheel Circumfrence and gearbox gear ratio to accomodate for the robot.
     public ChassisSpeeds getCurrentSpeeds(){
-        return kinematics.toChassisSpeeds(new DifferentialDriveWheelSpeeds((leftEncoder.getVelocity() * Constants.wheelCirc * Constants.driveGearRatio)/60, 
+        return kinematics.toChassisSpeeds(new DifferentialDriveWheelSpeeds(
+            (leftEncoder.getVelocity() * Constants.wheelCirc * Constants.driveGearRatio)/60, 
             (rightEncoder.getVelocity() * Constants.wheelCirc * Constants.driveGearRatio)/60));
     }
 
     public void updatePose(){
         poseEstimator.update(currentRotation2d, 
-            new DifferentialDriveWheelPositions(leftEncoder.getPosition() * Constants.driveGearRatio * Constants.wheelCirc, 
-                rightEncoder.getPosition() * Constants.driveGearRatio * Constants.wheelCirc));
+            new DifferentialDriveWheelPositions(getLeftPosition(), 
+                getRightPosition()));
     }
+    
 
     public void updateUI(){
         Pose2d pose = poseEstimator.getEstimatedPosition();

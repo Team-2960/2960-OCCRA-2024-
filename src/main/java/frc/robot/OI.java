@@ -1,6 +1,7 @@
 package frc.robot;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -28,6 +29,9 @@ public class OI extends SubsystemBase {
         drive.setPower(MathUtil.applyDeadband(gamepad1.getRawAxis(1), 0.1), 
             MathUtil.applyDeadband(gamepad1.getRawAxis(5), 0.1), 
             gamepad1.getRawButton(6));
+        if (gamepad1.getRawButton(1)){
+            drive.presetPosition(new Pose2d());
+        }
     }
 
 
