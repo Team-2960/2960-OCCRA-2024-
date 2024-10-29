@@ -64,16 +64,22 @@ public class Drive extends SubsystemBase {
 
     private PIDController leftPidController;
     private PIDController rightPidController;
+    private PIDController distanceController;
 
     private GenericEntry sbPoseX;
     private GenericEntry sbPoseY;
     private GenericEntry sbRotationPose;
     private GenericEntry sbRawRotation;
 
+    private GenericEntry sbLeftVoltage;
+    private GenericEntry sbRightVoltage;
     public AutoBuilder autoBuilder;
 
     private double rawRotation2d;
     private Rotation2d currentRotation2d;
+
+    private double leftOutput;
+    private double rightOutput;
     
 
     
@@ -110,17 +116,28 @@ public class Drive extends SubsystemBase {
             new Pose2d());
 
         //feedforward and PID values
-        feedforward = new SimpleMotorFeedforward(1, 3);
-        leftPidController = new PIDController(1, 0, 0);
-        rightPidController = new PIDController(1, 0, 0);
+        feedforward = new SimpleMotorFeedforward(1, 6);
+        leftPidController = new PIDController(0, 0, 0);
+        rightPidController = new PIDController(0, 0, 0);
+        distanceController = new PIDController(0, 0, 0);
 
+        leftOutput = 0;
+        rightOutput = 0;
         var poseLayout = Shuffleboard.getTab("Drive")
             .getLayout("Drive Pose", BuiltInLayouts.kList)
             .withSize(1, 4);
+        var voltageLayout = Shuffleboard.getTab("Drive").
+            getLayout("Drive Voltage", BuiltInLayouts.kList)
+            .withSize(1, 4);
+            
         sbPoseX = poseLayout.add("Pose X", poseEstimator.getEstimatedPosition().getX()).getEntry();
         sbPoseY = poseLayout.add("Pose Y", poseEstimator.getEstimatedPosition().getY()).getEntry();
         sbRotationPose = poseLayout.add("Pose Rotation", poseEstimator.getEstimatedPosition().getRotation().getDegrees()).getEntry();
         sbRawRotation = poseLayout.add("Raw Rotation", rawRotation2d).getEntry();
+
+        sbLeftVoltage = voltageLayout.add("Left Voltage", leftMotor1.getBusVoltage()).getEntry();
+        sbRightVoltage = voltageLayout.add("Right Voltage", rightMotor1.getBusVoltage()).getEntry();
+        
 
         
 
@@ -178,16 +195,22 @@ public class Drive extends SubsystemBase {
     //Set speeds of chassis motors based on calculation by feeding DifferentialDriveWheelSpeeds into feedforwards and PID Controllers
     public void setSpeeds(DifferentialDriveWheelSpeeds speeds) {
         final double leftFeedforward =
-            feedforward.calculate(speeds.leftMetersPerSecond);
+            feedforward.calculate(-speeds.leftMetersPerSecond);
         final double rightFeedforward =
-            feedforward.calculate(speeds.rightMetersPerSecond);
+            feedforward.calculate(-speeds.rightMetersPerSecond);
     
         final double leftOutput =
-            leftPidController.calculate(leftEncoder.getVelocity(), speeds.leftMetersPerSecond);
+            leftPidController.calculate(-getLeftVelocity()/60, speeds.leftMetersPerSecond);
         final double rightOutput =
-            rightPidController.calculate(rightEncoder.getVelocity(), speeds.rightMetersPerSecond);
-        leftMotor1.setVoltage(leftOutput + leftFeedforward);
-        rightMotor1.setVoltage(rightOutput + rightFeedforward);
+            rightPidController.calculate(-getRightVelocity()/60, speeds.rightMetersPerSecond);
+        leftMotor1.setVoltage((leftOutput + leftFeedforward));
+        rightMotor1.setVoltage((rightOutput + rightFeedforward));
+        this.leftOutput = leftOutput + leftFeedforward;
+        this.rightOutput = rightOutput + rightFeedforward;
+    }
+
+    public void driveDistance(double leftMeters, double rightMeters){
+        
     }
 
     public double getLeftPosition(){
@@ -196,6 +219,14 @@ public class Drive extends SubsystemBase {
 
     public double getRightPosition(){
         return rightEncoder.getPosition() * Constants.driveGearRatio * Constants.wheelCirc;
+    }
+
+    public double getLeftVelocity(){
+        return leftEncoder.getVelocity() * Constants.driveGearRatio;
+    }
+
+    public double getRightVelocity(){
+        return rightEncoder.getVelocity() * Constants.driveGearRatio;
     }
     //Converts ChassisSpeeds to DifferentialDriveWheelSpeeds using kinematics function, then input the speed into the setSpeeds method.
     public void drive(ChassisSpeeds chassisSpeeds){
@@ -220,8 +251,8 @@ public class Drive extends SubsystemBase {
     //Method to return the motor velocities, motor velocities (Rotations per minute divided by 60) altered using wheel Circumfrence and gearbox gear ratio to accomodate for the robot.
     public ChassisSpeeds getCurrentSpeeds(){
         return kinematics.toChassisSpeeds(new DifferentialDriveWheelSpeeds(
-            (leftEncoder.getVelocity() * Constants.wheelCirc * Constants.driveGearRatio)/60, 
-            (rightEncoder.getVelocity() * Constants.wheelCirc * Constants.driveGearRatio)/60));
+            (getLeftVelocity())/60, 
+            (getLeftVelocity())/60));
     }
 
     public void updatePose(){
@@ -237,6 +268,8 @@ public class Drive extends SubsystemBase {
         sbPoseY.setDouble(pose.getY());
         sbRotationPose.setDouble(pose.getRotation().getDegrees());
         sbRawRotation.setDouble(rawRotation2d);
+        sbLeftVoltage.setDouble(leftMotor1.getBusVoltage());
+        sbRightVoltage.setDouble(rightMotor1.getBusVoltage());
     }
 
     @Override

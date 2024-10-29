@@ -4,13 +4,18 @@
 
 package frc.robot;
 
+import java.util.Optional;
+
 import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Auton.RobotContainer;
+import frc.robot.Auton.Commands.AutonList;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Pneumatics;
@@ -33,6 +38,8 @@ public class Robot extends TimedRobot {
   Shooter shooter;
   Intake intake;
   Pneumatics pneumatics;
+  Optional<Command> autonomousCommand;
+  RobotContainer robotContainer;
 
   Joystick controller1 = new Joystick(0);
   
@@ -43,6 +50,8 @@ public class Robot extends TimedRobot {
     intake = Intake.getInstance();
     pneumatics = Pneumatics.getInstance();
     oi = OI.getInstance();
+    robotContainer = new RobotContainer();
+    autonomousCommand = AutonList.getDefaultCommand();
   }
 
   @Override
@@ -51,7 +60,13 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void autonomousInit() {}
+  public void autonomousInit() {
+    if (autonomousCommand.isPresent()) autonomousCommand.get().schedule();
+    /*autonomousCommand = robotContainer.getAutonomousCommand();
+    if (autonomousCommand == null){
+      autonomousCommand.schedule();
+    }*/
+  }
 
   @Override
   public void autonomousPeriodic() {}

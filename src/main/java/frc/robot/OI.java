@@ -2,6 +2,7 @@ package frc.robot;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -31,6 +32,9 @@ public class OI extends SubsystemBase {
             gamepad1.getRawButton(6));
         if (gamepad1.getRawButton(1)){
             drive.presetPosition(new Pose2d());
+        }
+        if (gamepad1.getRawButton(2)){
+            drive.setSpeeds(new DifferentialDriveWheelSpeeds(0.1, 0.1));
         }
     }
 
@@ -63,13 +67,10 @@ public class OI extends SubsystemBase {
     private void updateShooter(){
         if (gamepad2.getRawAxis(3) > 0.1){
             shooter.enableShooter(true);
-        }else{
-            shooter.enableShooter(false);
-        }
-
-        if(gamepad2.getRawAxis(2) > 0.1){
+        } else if(gamepad2.getRawAxis(2) > 0.1){
             shooter.revShootSpeed(true);
-        }else{
+        } else{
+            shooter.enableShooter(false);
             shooter.revShootSpeed(false);
         }
     }

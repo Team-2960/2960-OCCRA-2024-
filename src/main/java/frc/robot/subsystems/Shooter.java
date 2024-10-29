@@ -28,7 +28,7 @@ public class Shooter extends SubsystemBase {
      * @param setSpeed
      */
     public void setShooter(double setSpeed){
-       shooterMotor.set(setSpeed * Constants.shooterChargePower);
+       shooterMotor.set(setSpeed);
     }
 
     /**
