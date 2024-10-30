@@ -38,6 +38,6 @@ public class Constants {
     //Wheel Size
     public static final double wheelCirc = 0.479;
     public static final double trackWidth = 0.591;
-    public static final double driveGearRatio = 0.1182;
+    public static final double driveGearRatio = 0.168; //5.95:1 Gear Ratio
     
 }

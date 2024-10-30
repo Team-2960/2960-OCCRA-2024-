@@ -73,6 +73,11 @@ public class Drive extends SubsystemBase {
 
     private GenericEntry sbLeftVoltage;
     private GenericEntry sbRightVoltage;
+    private GenericEntry sbLeftVelocity;
+    private GenericEntry sbRightVelocity;
+    private GenericEntry sbLeftPosition;
+    private GenericEntry sbRightPosition;
+
     public AutoBuilder autoBuilder;
 
     private double rawRotation2d;
@@ -113,23 +118,23 @@ public class Drive extends SubsystemBase {
         rawRotation2d = imu.getHeading();
         currentRotation2d = Rotation2d.fromDegrees(rawRotation2d);
         poseEstimator = new DifferentialDrivePoseEstimator(kinematics, currentRotation2d, 
-            leftEncoder.getPosition() * Constants.driveGearRatio * Constants.wheelCirc, 
-            rightEncoder.getPosition() * Constants.driveGearRatio * Constants.wheelCirc, 
+            getLeftPosition(), 
+            getRightPosition(), 
             new Pose2d());
 
         //feedforward and PID values
-        feedforward = new SimpleMotorFeedforward(0, 2.16, 0.5);
+        feedforward = new SimpleMotorFeedforward(0, 2.16, 0.39);
         leftPidController = new PIDController(0, 0, 0);
         rightPidController = new PIDController(0, 0, 0);
-        distanceController = new PIDController(0, 0, 0);
+        distanceController = new PIDController(1, 0, 0);
 
         leftOutput = 0;
         rightOutput = 0;
         var poseLayout = Shuffleboard.getTab("Drive")
             .getLayout("Drive Pose", BuiltInLayouts.kList)
             .withSize(1, 4);
-        var voltageLayout = Shuffleboard.getTab("Drive").
-            getLayout("Drive Voltage", BuiltInLayouts.kList)
+        var motorLayout = Shuffleboard.getTab("Drive").
+            getLayout("Drive Motors", BuiltInLayouts.kList)
             .withSize(1, 4);
             
         sbPoseX = poseLayout.add("Pose X", poseEstimator.getEstimatedPosition().getX()).getEntry();
@@ -137,8 +142,13 @@ public class Drive extends SubsystemBase {
         sbRotationPose = poseLayout.add("Pose Rotation", poseEstimator.getEstimatedPosition().getRotation().getDegrees()).getEntry();
         sbRawRotation = poseLayout.add("Raw Rotation", rawRotation2d).getEntry();
 
-        sbLeftVoltage = voltageLayout.add("Left Voltage", leftMotor1.getBusVoltage()).getEntry();
-        sbRightVoltage = voltageLayout.add("Right Voltage", rightMotor1.getBusVoltage()).getEntry();
+        sbLeftVoltage = motorLayout.add("Left Voltage", leftMotor1.getBusVoltage()).getEntry();
+        sbRightVoltage = motorLayout.add("Right Voltage", rightMotor1.getBusVoltage()).getEntry();
+        sbLeftVelocity = motorLayout.add("Left Velocity", getLeftVelocity()).getEntry();
+        sbRightVelocity = motorLayout.add("Right Velocity", getRightVelocity()).getEntry();
+        sbLeftPosition = motorLayout.add("Left Position", getLeftPosition()).getEntry();
+        sbRightPosition = motorLayout.add("Right Position", getRightPosition()).getEntry();
+
         
 
         
@@ -212,10 +222,10 @@ public class Drive extends SubsystemBase {
     }
 
     public void driveDistance(double leftGoal, double rightGoal, double leftInitial, double rightInitial){
-        double leftDistance = leftGoal - leftInitial;
-        double rightDistance = rightGoal - rightInitial;
-        double leftSpeed = distanceController.calculate(leftDistance);
-        double rightSpeed = distanceController.calculate(rightDistance);
+        double leftSpeed = distanceController.calculate(-getLeftPosition() - leftInitial, leftGoal);
+        double rightSpeed = distanceController.calculate(-getRightPosition() - rightInitial, rightGoal);
+        setSpeeds(new DifferentialDriveWheelSpeeds(leftSpeed, rightSpeed));
+
     }
 
     public double getLeftPosition(){
@@ -248,6 +258,7 @@ public class Drive extends SubsystemBase {
             pose2d);
     }
 
+
     //Method that gets the pose from the poseEstimator, mainly created for the pathPlanner to call.
     public Pose2d getPose(){
         return poseEstimator.getEstimatedPosition();
@@ -273,8 +284,13 @@ public class Drive extends SubsystemBase {
         sbPoseY.setDouble(pose.getY());
         sbRotationPose.setDouble(pose.getRotation().getDegrees());
         sbRawRotation.setDouble(rawRotation2d);
+        
         sbLeftVoltage.setDouble(leftMotor1.getBusVoltage());
         sbRightVoltage.setDouble(rightMotor1.getBusVoltage());
+        sbLeftVelocity.setDouble(getLeftVelocity());
+        sbRightVelocity.setDouble(getRightVelocity());
+        sbLeftPosition.setDouble(getLeftPosition());
+        sbRightPosition.setDouble(getRightPosition());
     }
 
     @Override

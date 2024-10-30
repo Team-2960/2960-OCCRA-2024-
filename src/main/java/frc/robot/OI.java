@@ -6,6 +6,7 @@ import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Auton.Commands.Drive.driveToDistance;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
@@ -27,6 +28,8 @@ public class OI extends SubsystemBase {
 //Driver
     private void updateDrive(){
         Drive drive = Drive.getInstance();
+        double rightInitial = 0;
+        double leftInitial = 0;
         drive.setPower(MathUtil.applyDeadband(gamepad1.getRawAxis(1), 0.1), 
             MathUtil.applyDeadband(gamepad1.getRawAxis(5), 0.1), 
             gamepad1.getRawButton(6));
@@ -34,7 +37,14 @@ public class OI extends SubsystemBase {
             drive.presetPosition(new Pose2d());
         }
         if (gamepad1.getRawButton(2)){
-            drive.setSpeeds(new DifferentialDriveWheelSpeeds(0.1, 0.1));
+            drive.setSpeeds(new DifferentialDriveWheelSpeeds(1, 1));
+        }
+        if (gamepad1.getRawButton(3)){
+            new driveToDistance(2, 2, 0.1);
+        }
+        if (gamepad1.getRawButton(4)){
+            rightInitial = drive.getRightPosition();
+            leftInitial = drive.getLeftPosition();
         }
     }
 
