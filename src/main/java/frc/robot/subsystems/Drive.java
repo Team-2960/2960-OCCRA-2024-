@@ -211,8 +211,11 @@ public class Drive extends SubsystemBase {
         this.rightOutput = rightOutput + rightFeedforward;
     }
 
-    public void driveDistance(double leftMeters, double rightMeters){
-        
+    public void driveDistance(double leftGoal, double rightGoal, double leftInitial, double rightInitial){
+        double leftDistance = leftGoal - leftInitial;
+        double rightDistance = rightGoal - rightInitial;
+        double leftSpeed = distanceController.calculate(leftDistance);
+        double rightSpeed = distanceController.calculate(rightDistance);
     }
 
     public double getLeftPosition(){
