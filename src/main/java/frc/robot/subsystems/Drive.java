@@ -101,6 +101,8 @@ public class Drive extends SubsystemBase {
         //Encoders are based off of the values from the motor's HallSensor. There is no encoder on the wheel's shaft, it is just straight NEO motor values.
         leftEncoder = leftMotor1.getEncoder(Type.kHallSensor, 42);
         rightEncoder = rightMotor1.getEncoder(Type.kHallSensor, 42);
+        leftEncoder.setVelocityConversionFactor(1/60);
+        rightEncoder.setVelocityConversionFactor(1/60);
         
         //Initialize Gyroscope
         imu = BNO055.getInstance(BNO055.opmode_t.OPERATION_MODE_IMUPLUS,
@@ -116,7 +118,7 @@ public class Drive extends SubsystemBase {
             new Pose2d());
 
         //feedforward and PID values
-        feedforward = new SimpleMotorFeedforward(1, 6);
+        feedforward = new SimpleMotorFeedforward(0, 2.16, 0.5);
         leftPidController = new PIDController(0, 0, 0);
         rightPidController = new PIDController(0, 0, 0);
         distanceController = new PIDController(0, 0, 0);
@@ -200,9 +202,9 @@ public class Drive extends SubsystemBase {
             feedforward.calculate(-speeds.rightMetersPerSecond);
     
         final double leftOutput =
-            leftPidController.calculate(-getLeftVelocity()/60, speeds.leftMetersPerSecond);
+            leftPidController.calculate(getLeftVelocity(), -speeds.leftMetersPerSecond);
         final double rightOutput =
-            rightPidController.calculate(-getRightVelocity()/60, speeds.rightMetersPerSecond);
+            rightPidController.calculate(getRightVelocity(), -speeds.rightMetersPerSecond);
         leftMotor1.setVoltage((leftOutput + leftFeedforward));
         rightMotor1.setVoltage((rightOutput + rightFeedforward));
         this.leftOutput = leftOutput + leftFeedforward;
@@ -251,8 +253,8 @@ public class Drive extends SubsystemBase {
     //Method to return the motor velocities, motor velocities (Rotations per minute divided by 60) altered using wheel Circumfrence and gearbox gear ratio to accomodate for the robot.
     public ChassisSpeeds getCurrentSpeeds(){
         return kinematics.toChassisSpeeds(new DifferentialDriveWheelSpeeds(
-            (getLeftVelocity())/60, 
-            (getLeftVelocity())/60));
+            getLeftVelocity(), 
+            getLeftVelocity()));
     }
 
     public void updatePose(){

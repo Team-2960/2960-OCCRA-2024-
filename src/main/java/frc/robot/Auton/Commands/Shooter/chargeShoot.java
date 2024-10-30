@@ -1,4 +1,4 @@
-package frc.robot.Auton.Commands;
+package frc.robot.Auton.Commands.Shooter;
 
 import java.io.Console;
 

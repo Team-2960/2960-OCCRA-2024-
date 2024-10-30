@@ -1,4 +1,4 @@
-package frc.robot.Auton.Commands;
+package frc.robot.Auton.Commands.Intake;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Intake;
