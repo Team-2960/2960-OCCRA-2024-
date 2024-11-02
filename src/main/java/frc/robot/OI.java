@@ -39,12 +39,15 @@ public class OI extends SubsystemBase {
         if (gamepad1.getRawButton(2)){
             drive.setSpeeds(new DifferentialDriveWheelSpeeds(1, 1));
         }
-        if (gamepad1.getRawButton(3)){
-            new driveToDistance(2, 2, 0.1);
+        else if (gamepad1.getRawButton(3)){
+            drive.driveDistance(2, 2, leftInitial, rightInitial);
         }
-        if (gamepad1.getRawButton(4)){
+        else if (gamepad1.getRawButton(4)){
             rightInitial = drive.getRightPosition();
             leftInitial = drive.getLeftPosition();
+        }
+        else if (gamepad1.getRawButton(5)){
+            drive.driveToRotation(90);
         }
     }
 
@@ -62,6 +65,7 @@ public class OI extends SubsystemBase {
         }else if(gamepad2.getRawButton(5)){
             intake.setIntake(true);
             intake.setHandoff(true);
+
         }else{
             intake.setIntake(false);
             intake.setHandoff(false);

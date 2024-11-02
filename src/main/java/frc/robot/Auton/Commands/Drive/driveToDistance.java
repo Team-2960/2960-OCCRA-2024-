@@ -1,5 +1,6 @@
 package frc.robot.Auton.Commands.Drive;
 
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Drive;
 
@@ -31,9 +32,14 @@ public class driveToDistance extends Command {
     }
 
     @Override
+    public void end(boolean interrupt){
+        drive.setSpeeds(new DifferentialDriveWheelSpeeds(0, 0));
+    }
+
+    @Override
     public boolean isFinished(){
-        boolean isLeftFinished = ((leftInitial + leftDistance) - (leftInitial + drive.getLeftPosition())) <= tolerance;
-        boolean isRightFinished = ((rightInitial + rightDistance) - (rightInitial + drive.getRightPosition())) <= tolerance;
+        boolean isLeftFinished = Math.abs((leftInitial + leftDistance) - (leftInitial + drive.getLeftPosition())) <= tolerance;
+        boolean isRightFinished = Math.abs((rightInitial + rightDistance) - (rightInitial + drive.getRightPosition())) <= tolerance;
 
         return isLeftFinished && isRightFinished;
         

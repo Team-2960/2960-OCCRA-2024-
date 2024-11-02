@@ -65,6 +65,7 @@ public class Drive extends SubsystemBase {
     private PIDController leftPidController;
     private PIDController rightPidController;
     private PIDController distanceController;
+    private PIDController rotationController;
 
     private GenericEntry sbPoseX;
     private GenericEntry sbPoseY;
@@ -77,6 +78,8 @@ public class Drive extends SubsystemBase {
     private GenericEntry sbRightVelocity;
     private GenericEntry sbLeftPosition;
     private GenericEntry sbRightPosition;
+    private GenericEntry sbLeftOutput;
+    private GenericEntry sbRightOutput;
 
     public AutoBuilder autoBuilder;
 
@@ -127,6 +130,8 @@ public class Drive extends SubsystemBase {
         leftPidController = new PIDController(0, 0, 0);
         rightPidController = new PIDController(0, 0, 0);
         distanceController = new PIDController(1, 0, 0);
+        rotationController = new PIDController(0.04, 0, 0.005);
+        rotationController.enableContinuousInput(-180, 180);
 
         leftOutput = 0;
         rightOutput = 0;
@@ -148,6 +153,8 @@ public class Drive extends SubsystemBase {
         sbRightVelocity = motorLayout.add("Right Velocity", getRightVelocity()).getEntry();
         sbLeftPosition = motorLayout.add("Left Position", getLeftPosition()).getEntry();
         sbRightPosition = motorLayout.add("Right Position", getRightPosition()).getEntry();
+        sbLeftOutput = motorLayout.add("Left Output (FF)", leftOutput).getEntry();
+        sbRightOutput = motorLayout.add("Right Output (FF)", rightOutput).getEntry();
 
         
 
@@ -215,8 +222,28 @@ public class Drive extends SubsystemBase {
             leftPidController.calculate(getLeftVelocity(), -speeds.leftMetersPerSecond);
         final double rightOutput =
             rightPidController.calculate(getRightVelocity(), -speeds.rightMetersPerSecond);
-        leftMotor1.setVoltage((leftOutput + leftFeedforward));
-        rightMotor1.setVoltage((rightOutput + rightFeedforward));
+        double leftVoltage;
+        double rightVoltage;
+        if ((leftOutput + leftFeedforward) > 3.5){
+            leftVoltage = 3.5;
+        }else if((leftOutput + leftFeedforward) < -3.5){
+            leftVoltage = -3.5;
+        }else{
+            leftVoltage = leftOutput + leftFeedforward;
+        }
+
+        if ((rightOutput + rightFeedforward) > 3.5){
+            rightVoltage = 3.5;
+        }else if ((rightOutput + rightFeedforward) < -3.5){
+            rightVoltage = -3.5;
+        }else{
+            rightVoltage = rightOutput + rightFeedforward;
+        }
+
+        leftMotor1.setVoltage((leftVoltage));
+        leftMotor2.setVoltage((leftVoltage));
+        rightMotor1.setVoltage((rightVoltage));
+        rightMotor2.setVoltage((rightVoltage));
         this.leftOutput = leftOutput + leftFeedforward;
         this.rightOutput = rightOutput + rightFeedforward;
     }
@@ -226,6 +253,12 @@ public class Drive extends SubsystemBase {
         double rightSpeed = distanceController.calculate(-getRightPosition() - rightInitial, rightGoal);
         setSpeeds(new DifferentialDriveWheelSpeeds(leftSpeed, rightSpeed));
 
+    }
+
+    public void driveToRotation(double goalRotation){
+        double curRotation = poseEstimator.getEstimatedPosition().getRotation().getDegrees();
+        double rotationCalc = rotationController.calculate(curRotation, goalRotation);
+        setSpeeds(new DifferentialDriveWheelSpeeds(rotationCalc, -rotationCalc));
     }
 
     public double getLeftPosition(){
@@ -291,6 +324,8 @@ public class Drive extends SubsystemBase {
         sbRightVelocity.setDouble(getRightVelocity());
         sbLeftPosition.setDouble(getLeftPosition());
         sbRightPosition.setDouble(getRightPosition());
+        sbLeftOutput.setDouble(leftOutput);
+        sbRightOutput.setDouble(rightOutput);
     }
 
     @Override
