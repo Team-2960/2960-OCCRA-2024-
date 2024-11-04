@@ -17,7 +17,7 @@ public class Constants {
     public static final int shooterPhotoeye = 0;
     
     //Intake Speeds
-    public static final double intakePower = .15;
+    public static final double intakePower = .2;
     public static final double handoffPower = 1;
     public static final double revHandoffPower = -1;
 
@@ -28,7 +28,7 @@ public class Constants {
     //Shooter Speed
     public static final double shooterChargePower = 0.5;
     public static final double reverseShooterPower = -0.27;
-    public static final double shooterPower = 0.27;
+    public static final double shooterPower = 0.285;
 
     //Pneumatics IDs
     public static final int intakeExtModuleID = 0;

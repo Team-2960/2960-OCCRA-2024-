@@ -80,6 +80,8 @@ public class Drive extends SubsystemBase {
     private GenericEntry sbRightPosition;
     private GenericEntry sbLeftOutput;
     private GenericEntry sbRightOutput;
+    private GenericEntry sbRightDistanceOutput;
+    private GenericEntry sbLeftDistanceOutput;
 
     public AutoBuilder autoBuilder;
 
@@ -88,6 +90,9 @@ public class Drive extends SubsystemBase {
 
     private double leftOutput;
     private double rightOutput;
+
+    private double leftDistanceOutput;
+    private double rightDistanceOutput;
     
 
     
@@ -130,11 +135,13 @@ public class Drive extends SubsystemBase {
         leftPidController = new PIDController(0, 0, 0);
         rightPidController = new PIDController(0, 0, 0);
         distanceController = new PIDController(1, 0, 0);
-        rotationController = new PIDController(0.04, 0, 0.005);
+        rotationController = new PIDController(0.041, 0, 0.005);
         rotationController.enableContinuousInput(-180, 180);
 
         leftOutput = 0;
         rightOutput = 0;
+        leftDistanceOutput = 0;
+        rightDistanceOutput = 0;
         var poseLayout = Shuffleboard.getTab("Drive")
             .getLayout("Drive Pose", BuiltInLayouts.kList)
             .withSize(1, 4);
@@ -155,6 +162,8 @@ public class Drive extends SubsystemBase {
         sbRightPosition = motorLayout.add("Right Position", getRightPosition()).getEntry();
         sbLeftOutput = motorLayout.add("Left Output (FF)", leftOutput).getEntry();
         sbRightOutput = motorLayout.add("Right Output (FF)", rightOutput).getEntry();
+        sbLeftDistanceOutput = motorLayout.add("Left Distance output", leftDistanceOutput).getEntry();
+        sbRightDistanceOutput = motorLayout.add("Right Distance Output", rightDistanceOutput).getEntry();
 
         
 
@@ -251,6 +260,8 @@ public class Drive extends SubsystemBase {
     public void driveDistance(double leftGoal, double rightGoal, double leftInitial, double rightInitial){
         double leftSpeed = distanceController.calculate(-getLeftPosition() - leftInitial, leftGoal);
         double rightSpeed = distanceController.calculate(-getRightPosition() - rightInitial, rightGoal);
+        this.leftDistanceOutput = -getLeftPosition() - leftInitial;
+        this.rightDistanceOutput = -getRightPosition() - rightInitial;
         setSpeeds(new DifferentialDriveWheelSpeeds(leftSpeed, rightSpeed));
 
     }
@@ -326,6 +337,8 @@ public class Drive extends SubsystemBase {
         sbRightPosition.setDouble(getRightPosition());
         sbLeftOutput.setDouble(leftOutput);
         sbRightOutput.setDouble(rightOutput);
+        sbLeftDistanceOutput.setDouble(leftDistanceOutput);
+        sbRightDistanceOutput.setDouble(rightDistanceOutput);
     }
 
     @Override

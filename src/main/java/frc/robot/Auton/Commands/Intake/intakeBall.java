@@ -11,6 +11,11 @@ public class intakeBall extends Command {
     }
 
     @Override
+    public void end(boolean interrupt){
+        Intake.getInstance().runAllIntake(false, false);
+    }
+
+    @Override
     public boolean isFinished(){
         //boolean finished = Intake.getInstance().isBallReady();
         return false;

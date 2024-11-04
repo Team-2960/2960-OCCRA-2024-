@@ -46,8 +46,10 @@ public class Intake extends SubsystemBase{
         }
     }
 
-    
-    
+    public void setIntakeSpeed(double speed){
+        intakeMotor.set(speed);
+    }
+
     /**
      * Sets handoff power
      * @param setHandoff
@@ -74,6 +76,10 @@ public class Intake extends SubsystemBase{
         }
     }
     
+    public void setHandoffSpeed(double speed){
+        handoffMotor.set(speed);
+    }
+
     /**
      * Sets intake extend position
      * @param setIntake

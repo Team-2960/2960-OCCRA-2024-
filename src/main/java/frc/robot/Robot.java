@@ -41,6 +41,7 @@ public class Robot extends TimedRobot {
   Intake intake;
   Pneumatics pneumatics;
   Optional<Command> autonomousCommand;
+  Command pathplannerCommand;
   RobotContainer robotContainer;
 
   Joystick controller1 = new Joystick(0);
@@ -54,6 +55,7 @@ public class Robot extends TimedRobot {
     oi = OI.getInstance();
     robotContainer = new RobotContainer();
     autonomousCommand = AutonList.getDefaultCommand();
+    //pathplannerCommand = robotContainer.getAutonomousCommand();
   }
 
   @Override
