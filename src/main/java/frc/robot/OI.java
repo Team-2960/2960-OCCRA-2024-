@@ -47,7 +47,7 @@ public class OI extends SubsystemBase {
             leftInitial = drive.getLeftPosition();
         }
         else if (gamepad1.getRawButton(5)){
-            drive.driveToRotation(90);
+            drive.driveToRotation(0);
         }
     }
 

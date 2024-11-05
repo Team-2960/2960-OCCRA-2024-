@@ -17,7 +17,7 @@ public class Constants {
     public static final int shooterPhotoeye = 0;
     
     //Intake Speeds
-    public static final double intakePower = .2;
+    public static final double intakePower = .25;
     public static final double handoffPower = 1;
     public static final double revHandoffPower = -1;
 
