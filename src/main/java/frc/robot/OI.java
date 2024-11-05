@@ -19,17 +19,21 @@ public class OI extends SubsystemBase {
     private Joystick gamepad1;
     private Joystick gamepad2;
 
+    private double leftInitial;
+    private double rightInitial;
+
     
     private OI() {
         gamepad1 = new Joystick(0);
         gamepad2 = new Joystick(1);
+
+        leftInitial = 0;
+        rightInitial = 0;
     }
 
 //Driver
     private void updateDrive(){
         Drive drive = Drive.getInstance();
-        double rightInitial = 0;
-        double leftInitial = 0;
         drive.setPower(MathUtil.applyDeadband(gamepad1.getRawAxis(1), 0.1), 
             MathUtil.applyDeadband(gamepad1.getRawAxis(5), 0.1), 
             gamepad1.getRawButton(6));

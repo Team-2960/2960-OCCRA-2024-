@@ -10,6 +10,7 @@ import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -66,9 +67,10 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     if (autonomousCommand.isPresent()) autonomousCommand.get().schedule();
-    /*autonomousCommand = robotContainer.getAutonomousCommand();
+    drive.presetPosition(new Pose2d());
+    /*pathplannerCommand = robotContainer.getAutonomousCommand();
     if (autonomousCommand == null){
-      autonomousCommand.schedule();
+      pathplannerCommand.schedule();
     }*/
   }
 
@@ -77,10 +79,10 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    /*if (autonomousCommand == null){
-      autonomousCommand.cancel();
-    }
-    */
+    /*if (pathplannerCommand == null){
+      pathplannerCommand.cancel();
+    }*/
+    
   }
 
   @Override
