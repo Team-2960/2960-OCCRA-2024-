@@ -62,6 +62,6 @@ public class AutonList{
     );
 
     public static Optional<Command> getDefaultCommand(){
-        return Optional.ofNullable(rightSideAuton);
+        return Optional.ofNullable(leftSideAuton);
     }
 }   

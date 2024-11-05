@@ -6,7 +6,11 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.cscore.VideoSource.ConnectionStrategy;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -15,12 +19,26 @@ public class Shooter extends SubsystemBase {
 
     private CANSparkFlex shooterMotor;
     //private DigitalInput shooterPhotoeye;
+    private SimpleMotorFeedforward shooterFF;
+
+    private GenericEntry sbShooterVoltage;
+    private GenericEntry sbShooterVelocity;
+
 
     private Shooter(){
         shooterMotor = new CANSparkFlex(Constants.shooterMotorID, MotorType.kBrushless);
         //shooterPhotoeye = new DigitalInput(Constants.shooterPhotoeye);
         shooterMotor.setIdleMode(IdleMode.kBrake);
         shooterMotor.setInverted(true);
+
+        shooterFF = new SimpleMotorFeedforward(0, 0.002);
+
+        var shooterLayout = Shuffleboard.getTab("Shooter")
+            .getLayout("Shooter", BuiltInLayouts.kList)
+            .withSize(1, 4);
+
+        sbShooterVoltage = shooterLayout.add("Shooter Volatge", shooterMotor.getBusVoltage()).getEntry();
+        sbShooterVelocity = shooterLayout.add("Shooter Velocity", shooterMotor.getEncoder().getVelocity()).getEntry();
     }
 
     /**
@@ -49,10 +67,15 @@ public class Shooter extends SubsystemBase {
      */
     public void enableShooter(boolean enable){
         if (enable){
-            shooterMotor.set(Constants.shooterPower);
+            setShooterSpeed(1800);
         }else{
             shooterMotor.set(0);
         }
+    }
+
+    public void setShooterSpeed(double targetRPM){
+        double voltage = shooterFF.calculate(targetRPM);
+        shooterMotor.setVoltage(voltage);
     }
 
     public boolean isShooterAtSpeed(double desiredVelocity){
@@ -69,6 +92,16 @@ public class Shooter extends SubsystemBase {
     }
     */
     
+    public void updateUI(){
+        sbShooterVoltage.setDouble(shooterMotor.getBusVoltage());
+        sbShooterVelocity.setDouble(shooterMotor.getEncoder().getVelocity());
+    }
+
+    @Override
+    public void periodic(){
+        updateUI();
+    }
+
     public static Shooter getInstance(){
         if (shooter == null){
             shooter = new Shooter();
