@@ -29,6 +29,7 @@ public class Constants {
     public static final double shooterChargePower = 0.5;
     public static final double reverseShooterPower = -0.27;
     public static final double shooterPower = 0.285;
+    public static final double shooterRPM = 1680;
 
     //Pneumatics IDs
     public static final int intakeExtModuleID = 0;
