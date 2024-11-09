@@ -10,6 +10,7 @@ import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkAbsoluteEncoder;
+import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.SparkRelativeEncoder.Type;
 
@@ -326,6 +327,15 @@ public class Drive extends SubsystemBase {
             new DifferentialDriveWheelPositions(getLeftPosition(), 
                 getRightPosition()));
     }
+
+    public void setDriveIdleMode(IdleMode mode){
+        leftMotor1.setIdleMode(mode);
+        leftMotor2.setIdleMode(mode);
+        rightMotor1.setIdleMode(mode);
+        rightMotor2.setIdleMode(mode);
+    }
+
+    
     
 
     public void updateUI(){

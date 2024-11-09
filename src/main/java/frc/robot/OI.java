@@ -1,5 +1,7 @@
 package frc.robot;
 
+import com.revrobotics.CANSparkBase.IdleMode;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
@@ -52,6 +54,12 @@ public class OI extends SubsystemBase {
         }
         else if (gamepad1.getRawButton(5)){
             drive.driveToRotation(0);
+        }
+
+        if (gamepad1.getPOV() == 0){
+            drive.setDriveIdleMode(IdleMode.kCoast);
+        }else if(gamepad1.getPOV() == 180){
+            drive.setDriveIdleMode(IdleMode.kBrake);
         }
     }
 

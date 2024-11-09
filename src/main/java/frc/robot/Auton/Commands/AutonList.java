@@ -152,6 +152,10 @@ public class AutonList{
         new shootToTime(.27, true, 1.5)
     );
 
+    public static final Command test = new SequentialCommandGroup(
+        new driveToDistance(1, 1, 0.1)
+    );
+
     public static Optional<Command> getDefaultCommand(){
         return Optional.ofNullable(leftSideAuton);
     }
