@@ -7,6 +7,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Auton.Commands.Drive.driveToDistance;
 import frc.robot.subsystems.Drive;
@@ -23,6 +24,7 @@ public class OI extends SubsystemBase {
 
     private double leftInitial;
     private double rightInitial;
+
 
     
     private OI() {
@@ -46,7 +48,7 @@ public class OI extends SubsystemBase {
             drive.setSpeeds(new DifferentialDriveWheelSpeeds(1, 1));
         }
         else if (gamepad1.getRawButton(3)){
-            drive.driveDistance(2, 2, leftInitial, rightInitial);
+            drive.driveDistance(1, 1, leftInitial, rightInitial);
         }
         else if (gamepad1.getRawButton(4)){
             rightInitial = drive.getRightPosition();
@@ -57,7 +59,8 @@ public class OI extends SubsystemBase {
         }
 
         if (gamepad1.getPOV() == 0){
-            drive.setDriveIdleMode(IdleMode.kCoast);
+            drive.setDriveIdleMode(IdleMode
+            .kCoast);
         }else if(gamepad1.getPOV() == 180){
             drive.setDriveIdleMode(IdleMode.kBrake);
         }
@@ -108,6 +111,8 @@ public class OI extends SubsystemBase {
             updateIntake();
             updateShooter();
         }
+        SmartDashboard.putNumber("Left Position", Drive.getInstance().getLeftPosition() - leftInitial);
+        SmartDashboard.putNumber("Right Position", Drive.getInstance().getRightPosition() - rightInitial);
     }
 
 

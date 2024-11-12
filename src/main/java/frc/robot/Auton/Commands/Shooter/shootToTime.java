@@ -6,7 +6,7 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 
 public class shootToTime extends Command {
-    double shootPower;
+    double shootSpeed;
     double time;
     boolean setHandoff;
     
@@ -15,8 +15,8 @@ public class shootToTime extends Command {
     Shooter shooter = Shooter.getInstance();
     Intake intake = Intake.getInstance();
 
-    public shootToTime(double shootPower, boolean setHandoff, double time){
-        this.shootPower = shootPower;
+    public shootToTime(double shootSpeed, boolean setHandoff, double time){
+        this.shootSpeed = shootSpeed;
         this.setHandoff = setHandoff;
         this.time = time;
     }
@@ -28,14 +28,14 @@ public class shootToTime extends Command {
 
     @Override
     public void execute(){
-        shooter.setShooter(shootPower);
+        shooter.setShooterSpeed(shootSpeed);;
         intake.setHandoff(setHandoff);
 
     }
 
     @Override
     public void end(boolean interrupt){
-        shooter.setShooter(0);
+        shooter.setShooterSpeed(0);
         intake.setHandoff(false);
     }
 

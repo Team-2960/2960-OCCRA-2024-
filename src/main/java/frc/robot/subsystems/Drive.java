@@ -138,8 +138,8 @@ public class Drive extends SubsystemBase {
         feedforward = new SimpleMotorFeedforward(0, 2.16, 0.39);
         leftPidController = new PIDController(0, 0, 0);
         rightPidController = new PIDController(0, 0, 0);
-        distanceController = new PIDController(1.1, 0, 0);
-        rotationController = new PIDController(0.043, 0, 0.005);
+        distanceController = new PIDController(1.7, 0, 0);
+        rotationController = new PIDController(0.05, 0, 0.006);
         rotationController.enableContinuousInput(-180, 180);
 
         leftOutput = 0;
@@ -240,9 +240,9 @@ public class Drive extends SubsystemBase {
         double leftVoltage;
         double rightVoltage;
         if ((leftOutput + leftFeedforward) > 3.5){
-            leftVoltage = 3.5;
+            leftVoltage = 3.4;
         }else if((leftOutput + leftFeedforward) < -3.5){
-            leftVoltage = -3.5;
+            leftVoltage = -3.4;
         }else{
             leftVoltage = leftOutput + leftFeedforward;
         }

@@ -79,6 +79,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    intake.setIntakeExt(false);
     /*if (pathplannerCommand == null){
       pathplannerCommand.cancel();
     }*/

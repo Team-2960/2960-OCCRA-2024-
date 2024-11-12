@@ -38,11 +38,10 @@ public class driveToDistance extends Command {
 
     @Override
     public boolean isFinished(){
-        boolean isLeftFinished = Math.abs((leftInitial + leftDistance) - (leftInitial + drive.getLeftPosition())) <= tolerance;
-        boolean isRightFinished = Math.abs((rightInitial + rightDistance) - (rightInitial + drive.getRightPosition())) <= tolerance;
+        boolean isLeftFinished = Math.abs(leftDistance - (drive.getLeftPosition() - leftInitial)) <= tolerance;
+        boolean isRightFinished = Math.abs(rightDistance - (drive.getRightPosition() - rightInitial)) <= tolerance;
 
         return isLeftFinished && isRightFinished;
-        
     }
 
 
