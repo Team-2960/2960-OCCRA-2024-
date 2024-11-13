@@ -15,6 +15,7 @@ import frc.robot.Auton.Commands.Intake.intakeBall;
 import frc.robot.Auton.Commands.Intake.setIntakeExt;
 import frc.robot.Auton.Commands.Intake.setIntakeState;
 import frc.robot.Auton.Commands.Shooter.shootToTime;
+import frc.robot.Auton.Commands.Shooter.shootToVelocity;
 
 public class AutonList{
     public static final Command leftSideAuton = new SequentialCommandGroup(
@@ -157,7 +158,7 @@ public class AutonList{
             new driveToDistance(1, 1, 0.1),
             new shootToTime(Constants.shooterRPM, false, 1)
         ),
-        new shootToTime(Constants.shooterRPM, true, 1),
+        new shootToVelocity(Constants.shooterRPM, true, 0),
         new ParallelCommandGroup(
             new ParallelRaceGroup(
                 new driveToRotation(-27, 2),

@@ -86,6 +86,10 @@ public class Shooter extends SubsystemBase {
         }
     }
 
+    public double getShooterVelocity(){
+        return shooterMotor.getAbsoluteEncoder().getVelocity();
+    }
+
     /* 
     public boolean isBallShot(){
         return shooterPhotoeye.get();
