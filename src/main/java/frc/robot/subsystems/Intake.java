@@ -19,27 +19,32 @@ public class Intake extends SubsystemBase{
     private CANSparkMax intakeMotor;
     private CANSparkMax handoffMotor;
     private DoubleSolenoid intakeExtender;
+    private DigitalInput intakePhotoeye;
 
     private boolean intakeExtState = false;
-    //private DigitalInput intakePhotoeye;
+    private boolean intakePhotoeyeState = false;
     
+    private boolean enablePhotoeye = true;
 
     private Intake(){
         intakeMotor = new CANSparkMax(Constants.intakeMotorID, MotorType.kBrushless);
         handoffMotor = new CANSparkMax(Constants.handoffMotorID, MotorType.kBrushless);
         intakeExtender = new DoubleSolenoid(20, PneumaticsModuleType.CTREPCM, Constants.intakeExtFor, Constants.intakeExtRev);
-        //intakePhotoeye = new DigitalInput(Constants.intakePhotoeyeID);
+        intakePhotoeye = new DigitalInput(Constants.intakePhotoeyeID);
         intakeMotor.setIdleMode(IdleMode.kBrake);
         handoffMotor.setIdleMode(IdleMode.kBrake);
         handoffMotor.setInverted(true);
         intakeMotor.setInverted(true);
+
     }
     /**
      * Sets intake power
      * @param setIntake
      */
     public void setIntake(boolean setIntake){
-        if (setIntake){
+        if (intakePhotoeye.get() && enablePhotoeye){
+            intakeMotor.set(0);
+        }else if (setIntake){
             intakeMotor.set(Constants.intakePower);
         }else{
             intakeMotor.set(0);
@@ -54,8 +59,14 @@ public class Intake extends SubsystemBase{
      * Sets handoff power
      * @param setHandoff
      */
-    public void setHandoff(boolean setHandoff){
-        if(setHandoff){
+    public void setHandoff(boolean setHandoff, boolean override){
+        if(override){
+            handoffMotor.set(Constants.handoffPower);
+        }
+        else if(intakePhotoeye.get() && enablePhotoeye){
+            handoffMotor.set(0);
+        }
+        else if(setHandoff){
             handoffMotor.set(Constants.handoffPower);
         } else{
             handoffMotor.set(0);
@@ -84,14 +95,27 @@ public class Intake extends SubsystemBase{
      * Sets intake extend position
      * @param setIntake
      */
-    public void setIntakeExt(boolean setIntake){
-        if(setIntake == true){
+    public void setIntakeExt(boolean state){
+        if(state){
+            intakePhotoeyeState = true;
+        }else{
+            intakePhotoeyeState = false;
+        }
+    }
+
+    public void updateIntake(){
+        if (intakePhotoeye.get() && enablePhotoeye){
+            intakeExtender.set(Value.kReverse);
+            intakePhotoeyeState = false;
+        }else if(intakePhotoeyeState){
             intakeExtender.set(Value.kForward);
         }else{
             intakeExtender.set(Value.kReverse);
         }
-        intakeExtState = setIntake;
-        
+    }
+
+    public boolean isBallPresent(){
+        return intakePhotoeye.get();
     }
 
     /**
@@ -123,7 +147,8 @@ public class Intake extends SubsystemBase{
         SmartDashboard.putBoolean("Intake State", intakeExtState);
         SmartDashboard.putBoolean("FwsSolenoidDisabled?", intakeExtender.isFwdSolenoidDisabled());
         SmartDashboard.putBoolean("RevSolenoidDisabled?", intakeExtender.isRevSolenoidDisabled());
-
+        SmartDashboard.putBoolean("intakePhotoeye", intakePhotoeye.get());
+        updateIntake();
     }
     
     

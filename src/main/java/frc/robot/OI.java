@@ -79,11 +79,15 @@ public class OI extends SubsystemBase {
             intake.setReverseHandoff(true);
         }else if(gamepad2.getRawButton(5)){
             intake.setIntake(true);
-            intake.setHandoff(true);
+            intake.setHandoff(true, false);
 
-        }else{
+        }else if(gamepad2.getRawAxis(2) > 0.1){
+            intake.setIntake(true);
+            intake.setHandoff(true, true);
+        }
+        else{
             intake.setIntake(false);
-            intake.setHandoff(false);
+            intake.setHandoff(false, false);
         }
         //intake.setReverseHandoff(gamepad2.getRawButton(6));
 

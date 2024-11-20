@@ -139,7 +139,7 @@ public class Drive extends SubsystemBase {
         leftPidController = new PIDController(0, 0, 0);
         rightPidController = new PIDController(0, 0, 0);
         distanceController = new PIDController(1.7, 0, 0);
-        rotationController = new PIDController(0.05, 0, 0.006);
+        rotationController = new PIDController(0.05, 0.004, 0.007);
         rotationController.enableContinuousInput(-180, 180);
 
         leftOutput = 0;

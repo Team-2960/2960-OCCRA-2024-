@@ -8,9 +8,15 @@ import frc.robot.subsystems.Shooter;
 
 public class chargeShoot extends Command{
     
+    double shootVelocity;
+
+    public chargeShoot(double shootVelocity){
+        this.shootVelocity = shootVelocity;
+    }
+
     @Override 
-    public void initialize(){
-        Shooter.getInstance().setShooter(Constants.shooterChargePower);
+    public void execute(){
+        Shooter.getInstance().setShooterSpeed(shootVelocity);;
     }
 
     @Override

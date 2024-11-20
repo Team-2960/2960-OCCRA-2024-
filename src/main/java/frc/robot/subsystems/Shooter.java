@@ -31,7 +31,7 @@ public class Shooter extends SubsystemBase {
         shooterMotor.setIdleMode(IdleMode.kBrake);
         shooterMotor.setInverted(true);
 
-        shooterFF = new SimpleMotorFeedforward(0, 0.00195);
+        shooterFF = new SimpleMotorFeedforward(0, 0.001925);
 
         var shooterLayout = Shuffleboard.getTab("Shooter")
             .getLayout("Shooter", BuiltInLayouts.kList)
@@ -87,7 +87,7 @@ public class Shooter extends SubsystemBase {
     }
 
     public double getShooterVelocity(){
-        return shooterMotor.getAbsoluteEncoder().getVelocity();
+        return shooterMotor.getEncoder().getVelocity();
     }
 
     /* 

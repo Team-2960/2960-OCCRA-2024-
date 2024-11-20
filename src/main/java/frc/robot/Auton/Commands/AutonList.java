@@ -3,6 +3,7 @@ package frc.robot.Auton.Commands;
 import java.util.Optional;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -14,6 +15,7 @@ import frc.robot.Auton.Commands.Drive.driveToTime;
 import frc.robot.Auton.Commands.Intake.intakeBall;
 import frc.robot.Auton.Commands.Intake.setIntakeExt;
 import frc.robot.Auton.Commands.Intake.setIntakeState;
+import frc.robot.Auton.Commands.Shooter.chargeShoot;
 import frc.robot.Auton.Commands.Shooter.shootToTime;
 import frc.robot.Auton.Commands.Shooter.shootToVelocity;
 
@@ -154,11 +156,12 @@ public class AutonList{
     );
 
     public static final Command left3Ball = new SequentialCommandGroup(
-        new ParallelCommandGroup(
-            new driveToDistance(1, 1, 0.1),
-            new shootToTime(Constants.shooterRPM, false, 1)
+        new ParallelRaceGroup(
+            new driveToDistance(1, 1, 0.2),
+            new chargeShoot(Constants.shooterRPM)
         ),
-        new shootToVelocity(Constants.shooterRPM, true, 0),
+        new shootToVelocity(Constants.shooterRPM, true, 7, 1),
+        
         new ParallelCommandGroup(
             new ParallelRaceGroup(
                 new driveToRotation(-27, 2),
@@ -167,26 +170,20 @@ public class AutonList{
             ,
             new setIntakeExt(true)
         ),
-        new ParallelRaceGroup(
-            new intakeBall(),
-            new driveToDistance(1.5, 1.5, 0.1),
-            new WaitCommand(3)
-        ),
         new ParallelCommandGroup(
-            new SequentialCommandGroup(
-                new ParallelRaceGroup(
-                    new setIntakeState(-Constants.handoffPower, 0),
-                    new WaitCommand(0.15)
-                ),
-                new shootToTime(2100, false, 1)
-
-            ),
             new ParallelRaceGroup(
-                new driveToRotation(-15, 2),
-                new WaitCommand(1)
-            )
+                new intakeBall(),
+                new WaitCommand(2)
+            ),
+            new driveToDistance(1.5, 1.5, 0.2)
+            
         ),
-        new shootToTime(2100, true, 1.5),
+        new ParallelRaceGroup(
+            new chargeShoot(2100),
+            new driveToRotation(-15, 2),
+            new WaitCommand(1)
+        ),
+        new shootToVelocity(2100, true, 7, 1),
         new ParallelCommandGroup(
             new ParallelRaceGroup(
                 new driveToRotation(-60, 2),
@@ -202,10 +199,12 @@ public class AutonList{
             ),
             new setIntakeExt(true)
         ),
-        new ParallelRaceGroup(
-            new intakeBall(),
-            new driveToDistance(1.2, 1.2, 0.1),
-            new WaitCommand(3)
+        new ParallelCommandGroup(
+            new ParallelRaceGroup(
+                new intakeBall(),
+                new WaitCommand(2)
+            ),
+            new driveToDistance(1.2, 1.2, 0.1)
         ),
         new ParallelRaceGroup(
             new intakeBall(),
@@ -227,31 +226,27 @@ public class AutonList{
             new driveToDistance(-1.1, -1.1, 0.1),
             new WaitCommand(3)
         ),
-        new ParallelCommandGroup(
-            new SequentialCommandGroup(
-                new ParallelRaceGroup(
-                    new setIntakeState(-Constants.handoffPower, 0),
-                    new WaitCommand(0.15)
-                ),
-                new shootToTime(2100, false, 1)
-
-            ),
-            new ParallelRaceGroup(
-                new driveToRotation(-15, 2),
-                new WaitCommand(1)
-            )
+        new ParallelRaceGroup(
+            new chargeShoot(2100),
+            new driveToRotation(-15, 2),
+            new WaitCommand(1)
         ),
-        new shootToTime(2100, true, 1.5)
+        new shootToVelocity(2100, true, 7, 1)
         
 
     );
 
     public static final Command right3Ball = new SequentialCommandGroup(
-        new ParallelCommandGroup(
-            new driveToDistance(1, 1, 0.1),
-            new shootToTime(Constants.shooterRPM, false, 1)
+        new ParallelRaceGroup(
+            new driveToDistance(1, 1, 0.2),
+            new chargeShoot(Constants.shooterRPM)
         ),
-        new shootToTime(Constants.shooterRPM, true, 1),
+        new ParallelRaceGroup(
+            new driveToRotation(10, 2),
+            new WaitCommand(0.5)
+        ),
+        new shootToVelocity(Constants.shooterRPM, true, 7, 1),
+        
         new ParallelCommandGroup(
             new ParallelRaceGroup(
                 new driveToRotation(27, 2),
@@ -260,26 +255,20 @@ public class AutonList{
             ,
             new setIntakeExt(true)
         ),
-        new ParallelRaceGroup(
-            new intakeBall(),
-            new driveToDistance(1.5, 1.5, 0.1),
-            new WaitCommand(3)
-        ),
         new ParallelCommandGroup(
-            new SequentialCommandGroup(
-                new ParallelRaceGroup(
-                    new setIntakeState(-Constants.handoffPower, 0),
-                    new WaitCommand(0.15)
-                ),
-                new shootToTime(2100, false, 1)
-
-            ),
             new ParallelRaceGroup(
-                new driveToRotation(15, 2),
-                new WaitCommand(1)
-            )
+                new intakeBall(),
+                new WaitCommand(2)
+            ),
+            new driveToDistance(1.5, 1.5, 0.2)
+            
         ),
-        new shootToTime(2100, true, 1.5),
+        new ParallelRaceGroup(
+            new chargeShoot(2100),
+            new driveToRotation(15, 2),
+            new WaitCommand(1)
+        ),
+        new shootToVelocity(2100, true, 7, 1),
         new ParallelCommandGroup(
             new ParallelRaceGroup(
                 new driveToRotation(60, 2),
@@ -295,10 +284,12 @@ public class AutonList{
             ),
             new setIntakeExt(true)
         ),
-        new ParallelRaceGroup(
-            new intakeBall(),
-            new driveToDistance(1.2, 1.2, 0.1),
-            new WaitCommand(3)
+        new ParallelCommandGroup(
+            new ParallelRaceGroup(
+                new intakeBall(),
+                new WaitCommand(2)
+            ),
+            new driveToDistance(1.2, 1.2, 0.1)
         ),
         new ParallelRaceGroup(
             new intakeBall(),
@@ -320,21 +311,12 @@ public class AutonList{
             new driveToDistance(-1.1, -1.1, 0.1),
             new WaitCommand(3)
         ),
-        new ParallelCommandGroup(
-            new SequentialCommandGroup(
-                new ParallelRaceGroup(
-                    new setIntakeState(-Constants.handoffPower, 0),
-                    new WaitCommand(0.15)
-                ),
-                new shootToTime(2100, false, 1)
-
-            ),
-            new ParallelRaceGroup(
-                new driveToRotation(15, 2),
-                new WaitCommand(1)
-            )
+        new ParallelRaceGroup(
+            new chargeShoot(2100),
+            new driveToRotation(15, 2),
+            new WaitCommand(1)
         ),
-        new shootToTime(2100, true, 1.5)
+        new shootToVelocity(2100, true, 7, 1)
         
 
     );

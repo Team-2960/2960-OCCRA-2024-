@@ -28,15 +28,15 @@ public class shootToTime extends Command {
 
     @Override
     public void execute(){
-        shooter.setShooterSpeed(shootSpeed);;
-        intake.setHandoff(setHandoff);
+        shooter.setShooterSpeed(shootSpeed);
+        intake.setHandoff(setHandoff, false);
 
     }
 
     @Override
     public void end(boolean interrupt){
         shooter.setShooterSpeed(0);
-        intake.setHandoff(false);
+        intake.setHandoff(false, false);
     }
 
     @Override

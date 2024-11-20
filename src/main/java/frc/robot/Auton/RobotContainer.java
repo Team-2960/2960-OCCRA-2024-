@@ -10,7 +10,6 @@ import frc.robot.subsystems.Drive;
 public class RobotContainer {
     public Command getAutonomousCommand(){
         NamedCommands.registerCommand("intakeBall", new intakeBall());
-        NamedCommands.registerCommand("chargeShoot", new chargeShoot());
 
         return Drive.getInstance().autoBuilder.buildAuto("BL Auto");
     }
