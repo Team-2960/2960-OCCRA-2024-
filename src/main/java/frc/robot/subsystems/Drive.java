@@ -14,6 +14,7 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.SparkRelativeEncoder.Type;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
@@ -139,7 +140,7 @@ public class Drive extends SubsystemBase {
         leftPidController = new PIDController(0, 0, 0);
         rightPidController = new PIDController(0, 0, 0);
         distanceController = new PIDController(1.7, 0, 0);
-        rotationController = new PIDController(0.05, 0.004, 0.007);
+        rotationController = new PIDController(0.06, 0, 0.006);// 0.052, 0.007, 0.008 
         rotationController.enableContinuousInput(-180, 180);
 
         leftOutput = 0;
@@ -211,6 +212,22 @@ public class Drive extends SubsystemBase {
             leftMotor1.set(leftPower * Constants.normalMode);
             leftMotor2.set(leftPower * Constants.normalMode);
         }
+    }
+
+    public void arcadeDrive(double leftJoy, double rightJoy, boolean turbo){
+        double leftCalc = Math.max(Math.min(leftJoy - rightJoy, 1), -1);
+        double rightCalc = Math.max(Math.min(leftJoy + rightJoy, 1), -1);
+        if (!turbo){
+            leftCalc *= Constants.normalMode;
+            rightCalc *= Constants.normalMode;
+        }else{
+            leftCalc *= Constants.turboMode;
+            rightCalc *= Constants.turboMode;
+        }
+        leftMotor1.set(leftCalc);
+        leftMotor2.set(leftCalc);
+        rightMotor1.set(rightCalc);
+        rightMotor2.set(rightCalc);
     }
 
     /**

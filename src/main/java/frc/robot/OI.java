@@ -41,6 +41,7 @@ public class OI extends SubsystemBase {
         drive.setPower(MathUtil.applyDeadband(gamepad1.getRawAxis(1), 0.1), 
             MathUtil.applyDeadband(gamepad1.getRawAxis(5), 0.1), 
             gamepad1.getRawButton(6));
+            
         if (gamepad1.getRawButton(1)){
             drive.presetPosition(new Pose2d());
         }
